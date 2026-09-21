@@ -11,34 +11,32 @@
     <!-- Iconos (Feather Icons) -->
     <script src="https://unpkg.com/feather-icons"></script>
 
+    <!-- FIREBASE (Versión Compat para HTML simple) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         piel: {
-                            oscuro: '#4A3728', // Café tostado
-                            medio: '#8B5A2B',  // Café cuero
-                            claro: '#C19A6B',  // Camel
-                            beige: '#F9F6F0'   // Fondo crema
+                            oscuro: '#4A3728', medio: '#8B5A2B', claro: '#C19A6B', beige: '#F9F6F0'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Transiciones suaves */
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Ocultar barra de scroll en modales */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -49,24 +47,20 @@
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="cambiarVista('inicio')">
                     <h1 class="font-serif text-3xl font-bold text-piel-oscuro">Orozco Piel</h1>
                 </div>
-                <!-- Menú Desktop -->
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#" onclick="cambiarVista('inicio')" class="text-gray-600 hover:text-piel-medio transition">Inicio</a>
                     <a href="#" onclick="cambiarVista('catalogo')" class="text-gray-600 hover:text-piel-medio transition">Catálogo</a>
                     <a href="#" onclick="cambiarVista('admin')" class="text-piel-medio font-semibold hover:text-piel-oscuro transition flex items-center gap-1">
                         <i data-feather="settings" class="w-4 h-4"></i> Admin
                     </a>
-                    <!-- Icono Carrito -->
                     <button onclick="toggleCarrito()" class="relative text-piel-oscuro hover:text-piel-medio transition">
                         <i data-feather="shopping-bag"></i>
                         <span id="contador-carrito" class="absolute -top-2 -right-2 bg-piel-medio text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </button>
                 </div>
-                <!-- Menú Móvil -->
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="toggleCarrito()" class="relative text-piel-oscuro">
                         <i data-feather="shopping-bag"></i>
@@ -77,13 +71,12 @@
         </div>
     </nav>
 
-    <!-- Contenedor Principal (Vistas Dinámicas) -->
+    <!-- Contenedor Principal -->
     <main class="flex-grow">
-        
         <!-- VISTA 1: INICIO -->
         <div id="vista-inicio" class="fade-in block">
             <div class="relative bg-piel-oscuro h-[60vh] flex items-center justify-center overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000" alt="Taller de Piel" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-40">
                 <div class="relative z-10 text-center px-4">
                     <h2 class="text-4xl md:text-6xl font-serif text-white mb-4">Herencia en cada paso</h2>
                     <p class="text-lg md:text-xl text-piel-beige mb-8 font-light max-w-2xl mx-auto">Calzado artesanal confeccionado con la más fina selección de pieles. La tradición de la familia Orozco directo a tus pies.</p>
@@ -100,17 +93,15 @@
                 <h2 class="text-3xl font-serif text-piel-oscuro mb-2">Nuestra Colección</h2>
                 <div class="h-1 w-20 bg-piel-medio mx-auto"></div>
             </div>
-            <!-- Cuadrícula de Productos -->
             <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Se llena con JS -->
+                <p class="col-span-full text-center text-gray-500">Cargando catálogo desde la nube...</p>
             </div>
         </div>
 
-        <!-- VISTA 3: CHECKOUT (PAGO) -->
+        <!-- VISTA 3: CHECKOUT -->
         <div id="vista-checkout" class="fade-in hidden max-w-6xl mx-auto px-4 py-12">
             <h2 class="text-3xl font-serif text-piel-oscuro mb-8 text-center">Finalizar Compra</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <!-- Formulario -->
                 <div class="lg:col-span-2 space-y-8">
                     <!-- Envío -->
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
@@ -129,19 +120,15 @@
                             <i data-feather="credit-card"></i> 2. Método de Pago
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Opción Tarjeta -->
                             <div id="btn-pago-tarjeta" onclick="seleccionarPago('tarjeta')" class="border-2 border-gray-200 p-4 rounded-md cursor-pointer hover:border-piel-medio transition text-center">
                                 <i data-feather="credit-card" class="mx-auto mb-2 text-piel-oscuro"></i>
                                 <span class="font-semibold text-piel-oscuro">Tarjeta de Crédito/Débito</span>
                             </div>
-                            <!-- Opción OXXO -->
                             <div id="btn-pago-oxxo" onclick="seleccionarPago('oxxo')" class="border-2 border-gray-200 p-4 rounded-md cursor-pointer hover:border-piel-medio transition text-center">
                                 <i data-feather="dollar-sign" class="mx-auto mb-2 text-piel-oscuro"></i>
                                 <span class="font-semibold text-piel-oscuro">Pago en OXXO / Efectivo</span>
                             </div>
                         </div>
-
-                        <!-- Formulario de Tarjeta (Oculto por defecto) -->
                         <div id="formulario-tarjeta" class="hidden mt-6 bg-gray-50 p-4 rounded-md border border-gray-200">
                             <div class="space-y-4">
                                 <input type="text" id="tarjeta-numero" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
@@ -154,14 +141,11 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Resumen Fijo -->
                 <div class="lg:col-span-1">
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100 sticky top-24">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4">Resumen del Pedido</h3>
-                        <div id="checkout-lista" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar">
-                            <!-- Se llena con JS -->
-                        </div>
+                        <div id="checkout-lista" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar"></div>
                         <div class="border-t border-gray-200 pt-4 flex justify-between items-center mb-6">
                             <span class="font-semibold text-gray-600">Total a Pagar:</span>
                             <span id="checkout-total" class="text-2xl font-bold text-piel-oscuro">$0.00 MXN</span>
@@ -177,7 +161,7 @@
         <!-- VISTA 4: ADMIN -->
         <div id="vista-admin" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración</h2>
+                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración (Nube)</h2>
             </div>
             <div class="bg-white shadow-sm rounded-md border border-gray-200 overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -196,7 +180,6 @@
                 </table>
             </div>
         </div>
-
     </main>
 
     <!-- Footer -->
@@ -204,11 +187,6 @@
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="font-serif text-2xl mb-4">Orozco Piel</h2>
             <p class="font-light text-sm opacity-80 mb-6">Tradición familiar en cada puntada. Hecho a mano en México.</p>
-            <div class="flex justify-center space-x-6 text-sm">
-                <a href="#" class="hover:text-white">Instagram</a>
-                <a href="#" class="hover:text-white">Facebook</a>
-                <a href="#" class="hover:text-white">Políticas de Envío</a>
-            </div>
         </div>
     </footer>
 
@@ -227,14 +205,12 @@
                     <span class="font-bold text-gray-700">Total:</span>
                     <span id="carrito-total" class="font-bold text-xl text-piel-oscuro">$0.00 MXN</span>
                 </div>
-                <button onclick="irACheckout()" class="w-full bg-piel-medio hover:bg-piel-oscuro text-white py-3 rounded-md font-semibold transition">
-                    Ir a Pagar
-                </button>
+                <button onclick="irACheckout()" class="w-full bg-piel-medio hover:bg-piel-oscuro text-white py-3 rounded-md font-semibold transition">Ir a Pagar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL DE MENSAJES (Alertas de éxito/error) -->
+    <!-- MODAL DE MENSAJES -->
     <div id="modal-mensaje" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
         <div class="bg-white p-8 rounded-md shadow-xl text-center max-w-sm w-full fade-in">
             <div id="modal-icono" class="mx-auto mb-4 text-piel-medio flex justify-center"></div>
@@ -265,34 +241,78 @@
             </div>
             <div class="mt-6 flex justify-end space-x-3">
                 <button onclick="cerrarModalAdmin()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
-                <button onclick="guardarEdicionProducto()" class="bg-piel-medio text-white px-4 py-2 rounded hover:bg-piel-oscuro">Guardar Cambios</button>
+                <button id="btn-guardar-admin" onclick="guardarEdicionProducto()" class="bg-piel-medio text-white px-4 py-2 rounded hover:bg-piel-oscuro">Guardar en Nube</button>
             </div>
         </div>
     </div>
 
-    <!-- LÓGICA DE LA TIENDA (JavaScript) -->
+    <!-- LÓGICA DE LA TIENDA Y FIREBASE -->
     <script>
-        // Iniciar íconos
         feather.replace();
 
-        // 1. BASE DE DATOS DEL INVENTARIO (Mutable para el Admin)
-        // Se actualizaron los enlaces de Unsplash para evitar imágenes rotas
-        let inventario = [
-            { id: 1, nombre: "Botas de Piel Clásicas", categoria: "Hombre", precio: 1850, img: "https://images.unsplash.com/photo-1605812860427-4024433a70fd?auto=format&fit=crop&q=80&w=600" },
-            { id: 2, nombre: "Zapatos Oxford", categoria: "Hombre", precio: 1400, img: "https://images.unsplash.com/photo-1614252209318-4228af26388f?auto=format&fit=crop&q=80&w=600" },
-            { id: 3, nombre: "Mocasines de Antelina", categoria: "Unisex", precio: 1200, img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600" },
-            { id: 4, nombre: "Botines Casuales", categoria: "Mujer", precio: 1650, img: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&q=80&w=600" },
-            { id: 5, nombre: "Sandalias Artesanales", categoria: "Mujer", precio: 850, img: "https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&q=80&w=600" },
-            { id: 6, nombre: "Botas de Montar", categoria: "Mujer", precio: 2200, img: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=80&w=600" },
-            { id: 7, nombre: "Mocasines Clásicos Piel", categoria: "Hombre", precio: 1350, img: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=600" },
-            { id: 8, nombre: "Zapatos de Vestir Negros", categoria: "Hombre", precio: 1900, img: "https://images.unsplash.com/photo-1614252339460-e1f4220c3cb4?auto=format&fit=crop&q=80&w=600" }
-        ];
+        // 1. CONFIGURACIÓN EXACTA DE TU FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuEIxwxD1zzDcIXP6AQ5lJD56G27ZUVoE",
+            authDomain: "pagina-web-4dc43.firebaseapp.com",
+            projectId: "pagina-web-4dc43",
+            storageBucket: "pagina-web-4dc43.firebasestorage.app",
+            messagingSenderId: "231237683155",
+            appId: "1:231237683155:web:ee4de7e793b61f2cbfd126"
+        };
 
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let inventario = [];
         let carrito = [];
         let metodoPagoSeleccionado = null;
 
-        // 2. NAVEGACIÓN Y VISTAS
+        // 2. CARGAR INVENTARIO DESDE LA NUBE
+        async function cargarInventario() {
+            try {
+                const snapshot = await db.collection('productos').get();
+                
+                if (snapshot.empty) {
+                    const inventarioBase = [
+                        { id: 1, nombre: "Botas de Piel Clásicas", categoria: "Hombre", precio: 1850, img: "https://images.unsplash.com/photo-1605812860427-4024433a70fd?auto=format&fit=crop&q=80&w=600" },
+                        { id: 2, nombre: "Zapatos Oxford", categoria: "Hombre", precio: 1400, img: "https://images.unsplash.com/photo-1614252209318-4228af26388f?auto=format&fit=crop&q=80&w=600" },
+                        { id: 3, nombre: "Mocasines de Antelina", categoria: "Unisex", precio: 1200, img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600" },
+                        { id: 4, nombre: "Botines Casuales", categoria: "Mujer", precio: 1650, img: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&q=80&w=600" },
+                        { id: 5, nombre: "Sandalias Artesanales", categoria: "Mujer", precio: 850, img: "https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&q=80&w=600" },
+                        { id: 6, nombre: "Botas de Montar", categoria: "Mujer", precio: 2200, img: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=80&w=600" },
+                        { id: 7, nombre: "Mocasines Clásicos Piel", categoria: "Hombre", precio: 1350, img: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=600" },
+                        { id: 8, nombre: "Zapatos de Vestir Negros", categoria: "Hombre", precio: 1900, img: "https://images.unsplash.com/photo-1614252339460-e1f4220c3cb4?auto=format&fit=crop&q=80&w=600" }
+                    ];
+                    
+                    for (let prod of inventarioBase) {
+                        await db.collection('productos').doc(prod.id.toString()).set(prod);
+                    }
+                    inventario = inventarioBase;
+                } else {
+                    inventario = snapshot.docs.map(doc => doc.data());
+                    inventario.sort((a, b) => a.id - b.id);
+                }
+                
+                renderizarCatalogo();
+                if(!document.getElementById('vista-admin').classList.contains('hidden')){
+                    renderizarAdmin();
+                }
+            } catch (error) {
+                console.error("Error cargando de Firebase:", error);
+                document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-red-500">Error al conectar con la base de datos.</p>';
+            }
+        }
+
+        // 3. NAVEGACIÓN PROTEGIDA
         function cambiarVista(vista) {
+            if (vista === 'admin') {
+                const password = prompt("Ingresa la clave de administrador (es 1234):");
+                if (password !== "1234") {
+                    mostrarMensaje('Acceso Denegado', 'Contraseña incorrecta.', 'lock');
+                    return;
+                }
+            }
             document.getElementById('vista-inicio').classList.add('hidden');
             document.getElementById('vista-catalogo').classList.add('hidden');
             document.getElementById('vista-checkout').classList.add('hidden');
@@ -305,13 +325,12 @@
             window.scrollTo(0,0);
         }
 
-        // 3. RENDERIZAR EL CATÁLOGO (Lee de la base de datos)
+        // 4. FUNCIONES DE VISTAS Y CARRITO
         function renderizarCatalogo() {
             const contenedor = document.getElementById('contenedor-productos');
             contenedor.innerHTML = ''; 
-
             inventario.forEach(producto => {
-                const tarjeta = `
+                contenedor.innerHTML += `
                     <div class="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-xl transition duration-300 transform hover:-translate-y-1 group">
                         <div class="relative h-64 overflow-hidden">
                             <img src="${producto.img}" alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
@@ -326,57 +345,44 @@
                         </div>
                     </div>
                 `;
-                contenedor.innerHTML += tarjeta;
             });
-            feather.replace(); // Recargar iconos
+            feather.replace();
         }
 
-        // 4. LÓGICA DEL CARRITO
         function toggleCarrito() {
             const modal = document.getElementById('modal-carrito');
             if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                modal.classList.remove('hidden'); modal.classList.add('flex');
                 actualizarVisualCarrito();
             } else {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
+                modal.classList.add('hidden'); modal.classList.remove('flex');
             }
         }
 
         function agregarAlCarrito(id) {
             const producto = inventario.find(p => p.id === id);
             carrito.push(producto);
-            actualizarContadores();
+            document.getElementById('contador-carrito').innerText = carrito.length;
+            document.getElementById('contador-carrito-movil').innerText = carrito.length;
             mostrarMensaje('¡Agregado!', `${producto.nombre} se añadió a tu carrito.`, 'check-circle');
         }
 
         function eliminarDelCarrito(index) {
             carrito.splice(index, 1);
-            actualizarContadores();
+            document.getElementById('contador-carrito').innerText = carrito.length;
+            document.getElementById('contador-carrito-movil').innerText = carrito.length;
             actualizarVisualCarrito();
             actualizarVisualCheckout();
         }
 
-        function actualizarContadores() {
-            document.getElementById('contador-carrito').innerText = carrito.length;
-            document.getElementById('contador-carrito-movil').innerText = carrito.length;
-        }
-
-        function calcularTotal() {
-            return carrito.reduce((total, producto) => total + producto.precio, 0);
-        }
-
         function actualizarVisualCarrito() {
             const contenedor = document.getElementById('carrito-lista');
-            const spanTotal = document.getElementById('carrito-total');
-            
+            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
             if (carrito.length === 0) {
                 contenedor.innerHTML = '<p class="text-center text-gray-500 mt-10">Tu carrito está vacío.</p>';
-                spanTotal.innerText = '$0.00 MXN';
+                document.getElementById('carrito-total').innerText = '$0.00 MXN';
                 return;
             }
-
             contenedor.innerHTML = '';
             carrito.forEach((prod, index) => {
                 contenedor.innerHTML += `
@@ -390,25 +396,18 @@
                     </div>
                 `;
             });
-            spanTotal.innerText = `$${calcularTotal().toLocaleString('es-MX')} MXN`;
+            document.getElementById('carrito-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
             feather.replace();
         }
 
-        // 5. LÓGICA DE CHECKOUT Y PAGO
         function irACheckout() {
             if(carrito.length === 0) {
                 mostrarMensaje('Carrito Vacío', 'Agrega productos antes de pagar.', 'alert-circle');
                 return;
             }
-            toggleCarrito(); // Cierra el carrito
+            toggleCarrito();
             cambiarVista('checkout');
-            actualizarVisualCheckout();
-        }
-
-        function actualizarVisualCheckout() {
             const contenedor = document.getElementById('checkout-lista');
-            const spanTotal = document.getElementById('checkout-total');
-            
             contenedor.innerHTML = '';
             carrito.forEach(prod => {
                 contenedor.innerHTML += `
@@ -418,72 +417,42 @@
                     </div>
                 `;
             });
-            spanTotal.innerText = `$${calcularTotal().toLocaleString('es-MX')} MXN`;
+            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+            document.getElementById('checkout-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
         }
 
-        // Selección de Método de Pago y Mostrar Formulario de Tarjeta
         function seleccionarPago(metodo) {
             metodoPagoSeleccionado = metodo;
             const btnTarjeta = document.getElementById('btn-pago-tarjeta');
             const btnOxxo = document.getElementById('btn-pago-oxxo');
             const formTarjeta = document.getElementById('formulario-tarjeta');
-
-            // Resetear estilos
             btnTarjeta.classList.remove('border-piel-medio', 'bg-piel-beige');
             btnOxxo.classList.remove('border-piel-medio', 'bg-piel-beige');
-
             if (metodo === 'tarjeta') {
                 btnTarjeta.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.remove('hidden'); // Mostrar inputs de tarjeta
+                formTarjeta.classList.remove('hidden');
             } else {
                 btnOxxo.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.add('hidden'); // Ocultar inputs de tarjeta
+                formTarjeta.classList.add('hidden');
             }
         }
 
         function procesarCompra() {
-            const nombre = document.getElementById('chk-nombre').value;
-            const correo = document.getElementById('chk-correo').value;
-            const direccion = document.getElementById('chk-direccion').value;
-
-            if(!nombre || !correo || !direccion || !metodoPagoSeleccionado) {
-                mostrarMensaje('Faltan Datos', 'Por favor, llena tu información de envío y selecciona un método de pago.', 'alert-circle');
+            if(!metodoPagoSeleccionado) {
+                mostrarMensaje('Faltan Datos', 'Por favor selecciona un método de pago.', 'alert-circle');
                 return;
             }
-
-            // Validar tarjeta si fue seleccionada
-            if(metodoPagoSeleccionado === 'tarjeta') {
-                const num = document.getElementById('tarjeta-numero').value;
-                const nom = document.getElementById('tarjeta-nombre').value;
-                const fecha = document.getElementById('tarjeta-fecha').value;
-                const cvv = document.getElementById('tarjeta-cvv').value;
-
-                if(!num || !nom || !fecha || !cvv) {
-                    mostrarMensaje('Datos de Tarjeta', 'Por favor completa los datos de tu tarjeta para procesar el pago.', 'credit-card');
-                    return;
-                }
-            }
-
-            mostrarMensaje('¡Pedido Confirmado!', `Gracias por tu compra, ${nombre}. Hemos enviado los detalles a ${correo}.`, 'check-circle');
-            
-            // Limpiar carrito y formulario tras comprar
+            mostrarMensaje('¡Pedido Confirmado!', `Gracias por tu compra.`, 'check-circle');
             carrito = [];
-            actualizarContadores();
-            document.getElementById('chk-nombre').value = '';
-            document.getElementById('chk-correo').value = '';
-            document.getElementById('chk-direccion').value = '';
-            document.getElementById('tarjeta-numero').value = '';
-            document.getElementById('tarjeta-nombre').value = '';
-            document.getElementById('tarjeta-fecha').value = '';
-            document.getElementById('tarjeta-cvv').value = '';
+            document.getElementById('contador-carrito').innerText = 0;
+            document.getElementById('contador-carrito-movil').innerText = 0;
             setTimeout(() => cambiarVista('inicio'), 3000);
         }
 
-        // 6. LÓGICA DEL PANEL DE ADMINISTRACIÓN (NUEVO)
+        // 5. FUNCIONES DEL ADMIN ACTUALIZADAS CON FIREBASE
         function renderizarAdmin() {
             const tabla = document.getElementById('tabla-admin');
             tabla.innerHTML = '';
-
             inventario.forEach(prod => {
                 tabla.innerHTML += `
                     <tr class="border-b border-gray-100 hover:bg-gray-50">
@@ -508,7 +477,6 @@
             document.getElementById('edit-nombre').value = producto.nombre;
             document.getElementById('edit-precio').value = producto.precio;
             document.getElementById('edit-imagen').value = producto.img;
-            
             document.getElementById('modal-admin-editar').classList.remove('hidden');
             document.getElementById('modal-admin-editar').classList.add('flex');
         }
@@ -516,47 +484,57 @@
         function cerrarModalAdmin() {
             document.getElementById('modal-admin-editar').classList.add('hidden');
             document.getElementById('modal-admin-editar').classList.remove('flex');
+            document.getElementById('btn-guardar-admin').innerText = 'Guardar en Nube';
         }
 
-        function guardarEdicionProducto() {
+        async function guardarEdicionProducto() {
+            const btn = document.getElementById('btn-guardar-admin');
+            btn.innerText = 'Guardando...';
+
             const id = parseInt(document.getElementById('edit-id').value);
             const nuevoNombre = document.getElementById('edit-nombre').value;
             const nuevoPrecio = parseFloat(document.getElementById('edit-precio').value);
             const nuevaImg = document.getElementById('edit-imagen').value;
 
-            // Actualizar en el arreglo
-            let producto = inventario.find(p => p.id === id);
-            producto.nombre = nuevoNombre;
-            producto.precio = nuevoPrecio;
-            producto.img = nuevaImg;
+            try {
+                await db.collection('productos').doc(id.toString()).update({
+                    nombre: nuevoNombre,
+                    precio: nuevoPrecio,
+                    img: nuevaImg
+                });
 
-            cerrarModalAdmin();
-            renderizarAdmin(); // Actualiza la tabla
-            renderizarCatalogo(); // Actualiza el catálogo público
-            
-            mostrarMensaje('Actualizado', 'El producto ha sido modificado exitosamente.', 'check');
+                let producto = inventario.find(p => p.id === id);
+                producto.nombre = nuevoNombre;
+                producto.precio = nuevoPrecio;
+                producto.img = nuevaImg;
+
+                cerrarModalAdmin();
+                renderizarAdmin();
+                renderizarCatalogo();
+                mostrarMensaje('Actualizado', 'Guardado en la nube exitosamente.', 'check');
+            } catch (error) {
+                console.error("Error al actualizar:", error);
+                mostrarMensaje('Error', 'No se pudo guardar en la base de datos. Revisa las reglas de seguridad.', 'alert-triangle');
+                btn.innerText = 'Guardar en Nube';
+            }
         }
 
-        // 7. SISTEMA DE ALERTAS (MODALES ELEGANTES)
         function mostrarMensaje(titulo, texto, icono) {
             document.getElementById('modal-titulo').innerText = titulo;
             document.getElementById('modal-texto').innerText = texto;
             document.getElementById('modal-icono').innerHTML = `<i data-feather="${icono}" class="w-12 h-12"></i>`;
-            
-            const modal = document.getElementById('modal-mensaje');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            document.getElementById('modal-mensaje').classList.remove('hidden');
+            document.getElementById('modal-mensaje').classList.add('flex');
             feather.replace();
         }
 
         function cerrarModalMensaje() {
-            const modal = document.getElementById('modal-mensaje');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            document.getElementById('modal-mensaje').classList.add('hidden');
+            document.getElementById('modal-mensaje').classList.remove('flex');
         }
 
-        // Inicializar la primera vista (Inicio)
-        renderizarCatalogo();
+        // Ejecutar carga inicial al abrir la página
+        cargarInventario();
     </script>
 </body>
 </html>
