@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orozco Piel - Catálogo</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Playfair Display (Títulos) e Inter (Textos) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        piel: {
+                            oscuro: '#4A3728', /* Marrón oscuro elegante */
+                            medio: '#8B5A2B',  /* Tono cuero medio */
+                            claro: '#D2B48C',  /* Tono tostado/camel */
+                        },
+                        beige: '#F5F5DC',      /* Fondo claro cálido */
+                        blanco: '#FFFFFF',
+                        negro: '#121212'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F5DC;
+            color: #4A3728;
+        }
+
+        /* Utilidad para el subrayado elegante en los enlaces */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background-color: #8B5A2B;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased flex flex-col min-h-screen">
+
+    <header class="fixed w-full top-0 z-50 bg-beige/95 backdrop-blur-md border-b border-piel-claro/30 shadow-sm transition-all">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- Botón Menú Móvil -->
+            <button class="md:hidden text-piel-oscuro focus:outline-none p-2">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <!-- Logo -->
+            <a href="#" class="font-serif text-2xl md:text-3xl font-bold tracking-wider text-piel-oscuro flex-1 text-center md:text-left md:flex-none">
+                OROZCO PIEL
+            </a>
+
+            <!-- Navegación Principal -->
+            <nav class="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                <a href="#" class="nav-link text-piel-oscuro hover:text-piel-medio transition-colors">Inicio</a>
+                <a href="#catalogo" class="nav-link text-piel-oscuro hover:text-piel-medio transition-colors">Catálogo</a>
+                <a href="#nosotros" class="nav-link text-piel-oscuro hover:text-piel-medio transition-colors">Nosotros</a>
+                <a href="#contacto" class="nav-link text-piel-oscuro hover:text-piel-medio transition-colors">Contacto</a>
+            </nav>
+
+            <!-- Carrito -->
+            <div class="flex items-center">
+                <button class="relative text-piel-oscuro hover:text-piel-medio transition p-2">
+                    <i class="fas fa-shopping-bag text-xl"></i>
+                    <span class="absolute top-0 right-0 bg-piel-medio text-blanco text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-beige">
+                        0
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-28 pb-20">
+        
+        <div class="container mx-auto px-6 mb-12 text-center max-w-2xl">
+            <h2 class="text-piel-medio text-sm md:text-base font-semibold tracking-widest uppercase mb-3">
+                Colección de Temporada
+            </h2>
+            <h1 class="font-serif text-4xl md:text-5xl text-piel-oscuro font-bold mb-6">
+                Catálogo Orozco
+            </h1>
+            <div class="w-16 h-0.5 bg-piel-medio mx-auto mb-6"></div>
+            <p class="text-piel-oscuro/80 text-base md:text-lg font-light leading-relaxed">
+                Descubre nuestra selección de calzado artesanal. Cada par es cortado y cosido a mano para garantizar la mayor comodidad y distinción en cada paso.
+            </p>
+        </div>
+
+        <section id="catalogo" class="container mx-auto px-6">
+            <!-- Cuadrícula Responsiva: 1 col (móvil) -> 2 cols (tablet) -> 4 cols (desktop) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Producto 1: Botas de Piel Clásicas -->
+                <div class="group bg-blanco rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-piel-claro/20 flex flex-col">
+                    <div class="relative h-72 overflow-hidden bg-piel-claro/10">
+                        <img src="https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=800&auto=format&fit=crop" 
+                             alt="Botas de Piel Clásicas" 
+                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-center">
+                        <h3 class="font-serif text-xl font-bold text-piel-oscuro mb-2">Botas de Piel Clásicas</h3>
+                        <p class="text-piel-medio font-semibold text-lg mb-4">$2,200 MXN</p>
+                        <div class="mt-auto">
+                            <button class="w-full bg-piel-oscuro text-beige py-3 rounded-md font-medium tracking-wide hover:bg-piel-medio transition-colors duration-300 flex justify-center items-center gap-2">
+                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 2: Zapatos Oxford -->
+                <div class="group bg-blanco rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-piel-claro/20 flex flex-col">
+                    <div class="relative h-72 overflow-hidden bg-piel-claro/10">
+                        <img src="https://images.unsplash.com/photo-1614252339460-e17635c677ea?q=80&w=800&auto=format&fit=crop" 
+                             alt="Zapatos Oxford" 
+                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-center">
+                        <h3 class="font-serif text-xl font-bold text-piel-oscuro mb-2">Zapatos Oxford</h3>
+                        <p class="text-piel-medio font-semibold text-lg mb-4">$1,850 MXN</p>
+                        <div class="mt-auto">
+                            <button class="w-full bg-piel-oscuro text-beige py-3 rounded-md font-medium tracking-wide hover:bg-piel-medio transition-colors duration-300 flex justify-center items-center gap-2">
+                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 3: Mocasines -->
+                <div class="group bg-blanco rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-piel-claro/20 flex flex-col">
+                    <div class="relative h-72 overflow-hidden bg-piel-claro/10">
+                        <img src="https://images.unsplash.com/photo-1559564109-5867492c90c7?q=80&w=800&auto=format&fit=crop" 
+                             alt="Mocasines de Piel" 
+                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-center">
+                        <h3 class="font-serif text-xl font-bold text-piel-oscuro mb-2">Mocasines Clásicos</h3>
+                        <p class="text-piel-medio font-semibold text-lg mb-4">$1,500 MXN</p>
+                        <div class="mt-auto">
+                            <button class="w-full bg-piel-oscuro text-beige py-3 rounded-md font-medium tracking-wide hover:bg-piel-medio transition-colors duration-300 flex justify-center items-center gap-2">
+                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Producto 4: Botines -->
+                <div class="group bg-blanco rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-piel-claro/20 flex flex-col">
+                    <div class="relative h-72 overflow-hidden bg-piel-claro/10">
+                        <img src="https://images.unsplash.com/photo-1520639888713-7851133b1ed0?q=80&w=800&auto=format&fit=crop" 
+                             alt="Botines Casuales" 
+                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-center">
+                        <h3 class="font-serif text-xl font-bold text-piel-oscuro mb-2">Botines Casuales</h3>
+                        <p class="text-piel-medio font-semibold text-lg mb-4">$2,100 MXN</p>
+                        <div class="mt-auto">
+                            <button class="w-full bg-piel-oscuro text-beige py-3 rounded-md font-medium tracking-wide hover:bg-piel-medio transition-colors duration-300 flex justify-center items-center gap-2">
+                                <i class="fas fa-cart-plus"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-piel-oscuro text-beige pt-16 pb-8 border-t-4 border-piel-medio mt-auto">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-12 text-center md:text-left">
+                
+                <!-- Info Marca -->
+                <div>
+                    <h3 class="font-serif text-2xl font-bold tracking-wider mb-4 text-blanco">OROZCO PIEL</h3>
+                    <p class="text-sm font-light text-beige/70 leading-relaxed max-w-xs mx-auto md:mx-0">
+                        Auténtico calzado de piel, diseñado para quienes valoran la elegancia y la calidad artesanal.
+                    </p>
+                </div>
+
+                <!-- Enlaces Rápidos -->
+                <div>
+                    <h4 class="font-sans font-semibold tracking-widest text-sm uppercase mb-4 text-piel-claro">Atención al Cliente</h4>
+                    <ul class="space-y-2 text-sm font-light text-beige/80">
+                        <li><a href="#" class="hover:text-blanco transition-colors">Políticas de Privacidad</a></li>
+                        <li><a href="#" class="hover:text-blanco transition-colors">Términos y Condiciones</a></li>
+                        <li><a href="#" class="hover:text-blanco transition-colors">Envíos y Devoluciones</a></li>
+                        <li><a href="#" class="hover:text-blanco transition-colors">Guía de Tallas</a></li>
+                    </ul>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div>
+                    <h4 class="font-sans font-semibold tracking-widest text-sm uppercase mb-4 text-piel-claro">Síguenos</h4>
+                    <div class="flex justify-center md:justify-start space-x-5">
+                        <a href="#" class="w-10 h-10 rounded-full border border-beige/30 flex items-center justify-center hover:bg-piel-medio hover:border-piel-medio transition-all duration-300 text-blanco hover:scale-110">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-beige/30 flex items-center justify-center hover:bg-piel-medio hover:border-piel-medio transition-all duration-300 text-blanco hover:scale-110">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-beige/30 flex items-center justify-center hover:bg-piel-medio hover:border-piel-medio transition-all duration-300 text-blanco hover:scale-110">
+                            <i class="fab fa-pinterest-p"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Derechos de Autor -->
+            <div class="border-t border-beige/10 pt-8 text-center text-xs text-beige/50 font-light">
+                <p>&copy; 2023 Orozco Piel. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
