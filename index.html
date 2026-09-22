@@ -14,6 +14,7 @@
     <!-- FIREBASE (Versión Compat para HTML simple) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
     <script>
         tailwind.config = {
@@ -103,7 +104,6 @@
             <h2 class="text-3xl font-serif text-piel-oscuro mb-8 text-center">Finalizar Compra</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div class="lg:col-span-2 space-y-8">
-                    <!-- Envío -->
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
                             <i data-feather="map-pin"></i> 1. Datos de Envío
@@ -114,7 +114,6 @@
                             <input type="text" id="chk-direccion" placeholder="Dirección completa (Calle y número)" class="border border-gray-300 p-3 rounded-md w-full md:col-span-2 focus:outline-none focus:border-piel-medio">
                         </div>
                     </div>
-                    <!-- Pago -->
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
                             <i data-feather="credit-card"></i> 2. Método de Pago
@@ -141,7 +140,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Resumen Fijo -->
                 <div class="lg:col-span-1">
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100 sticky top-24">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4">Resumen del Pedido</h3>
@@ -161,10 +159,12 @@
         <!-- VISTA 4: ADMIN -->
         <div id="vista-admin" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración (Nube)</h2>
+                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración (Seguro)</h2>
+                <button onclick="cerrarSesionAdmin()" class="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 transition">
+                    <i data-feather="log-out" class="w-4 h-4"></i> Cerrar Sesión
+                </button>
             </div>
             
-            <!-- Configuraciones Generales -->
             <div class="mb-8 bg-white p-6 shadow-sm rounded-md border border-gray-200">
                 <h3 class="text-xl font-serif text-piel-oscuro mb-4">Configuración de la Tienda</h3>
                 <div class="flex items-end gap-4">
@@ -178,7 +178,6 @@
                 </div>
             </div>
 
-            <!-- Inventario -->
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-serif text-piel-oscuro">Inventario de Productos</h3>
                 <button onclick="abrirModalAdminNuevo()" class="bg-piel-claro hover:bg-piel-medio text-white px-4 py-2 rounded font-semibold flex items-center gap-2 transition">
@@ -213,7 +212,30 @@
         </div>
     </footer>
 
-    <!-- MODAL DEL CARRITO LATERAL -->
+    <!-- MODAL INICIO DE SESIÓN -->
+    <div id="modal-login" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden items-center justify-center">
+        <div class="bg-white p-8 rounded-md shadow-xl max-w-sm w-full fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-serif text-piel-oscuro">Iniciar Sesión</h3>
+                <button onclick="cerrarModalLogin()" class="text-gray-400 hover:text-gray-700"><i data-feather="x"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="login-email" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Contraseña</label>
+                    <input type="password" id="login-pass" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
+                </div>
+            </div>
+            <button onclick="procesarLogin()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition mt-6">
+                Entrar
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DEL CARRITO -->
     <div id="modal-carrito" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden justify-end transition-opacity">
         <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col fade-in">
             <div class="p-6 bg-piel-beige flex justify-between items-center border-b border-piel-claro">
@@ -234,7 +256,7 @@
     </div>
 
     <!-- MODAL DE MENSAJES -->
-    <div id="modal-mensaje" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
+    <div id="modal-mensaje" class="fixed inset-0 bg-black bg-opacity-50 z-[80] hidden items-center justify-center">
         <div class="bg-white p-8 rounded-md shadow-xl text-center max-w-sm w-full fade-in">
             <div id="modal-icono" class="mx-auto mb-4 text-piel-medio flex justify-center"></div>
             <h3 id="modal-titulo" class="text-2xl font-serif text-piel-oscuro mb-2">Mensaje</h3>
@@ -243,7 +265,7 @@
         </div>
     </div>
 
-    <!-- MODAL EDICIÓN / NUEVO ADMIN -->
+    <!-- MODAL EDICIÓN ADMIN -->
     <div id="modal-admin-editar" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
         <div class="bg-white p-8 rounded-md shadow-xl max-w-md w-full fade-in">
             <h3 id="modal-admin-titulo" class="text-2xl font-serif text-piel-oscuro mb-4">Editar Producto</h3>
@@ -258,7 +280,7 @@
                     <input type="number" id="edit-precio" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Categoría (Ej: Hombre, Mujer)</label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Categoría</label>
                     <input type="text" id="edit-categoria" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none text-sm">
                 </div>
                 <div>
@@ -273,11 +295,11 @@
         </div>
     </div>
 
-    <!-- LÓGICA DE LA TIENDA Y FIREBASE -->
+    <!-- LÓGICA DE LA TIENDA -->
     <script>
         feather.replace();
 
-        // 1. CONFIGURACIÓN EXACTA DE TU FIREBASE
+        // 1. CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCuEIxwxD1zzDcIXP6AQ5lJD56G27ZUVoE",
             authDomain: "pagina-web-4dc43.firebaseapp.com",
@@ -287,27 +309,63 @@
             appId: "1:231237683155:web:ee4de7e793b61f2cbfd126"
         };
 
-        // Inicializar Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
         let inventario = [];
         let carrito = [];
         let metodoPagoSeleccionado = null;
         let nombreTiendaBase = "Orozco Piel";
 
-        // 2. CARGAR CONFIGURACIÓN Y NOMBRE DE LA TIENDA
+        // 2. SISTEMA DE AUTENTICACIÓN
+        function cerrarModalLogin() {
+            document.getElementById('modal-login').classList.add('hidden');
+            document.getElementById('modal-login').classList.remove('flex');
+        }
+
+        async function procesarLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            
+            if(!email || !pass) {
+                mostrarMensaje('Error', 'Ingresa correo y contraseña.', 'alert-circle');
+                return;
+            }
+
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                cerrarModalLogin();
+                cambiarVista('admin');
+                mostrarMensaje('Bienvenido', 'Has iniciado sesión correctamente.', 'check-circle');
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-pass').value = '';
+            } catch (error) {
+                console.error(error);
+                mostrarMensaje('Acceso Denegado', 'Correo o contraseña incorrectos.', 'lock');
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            auth.signOut().then(() => {
+                cambiarVista('inicio');
+                mostrarMensaje('Sesión Cerrada', 'Has salido del panel de administrador.', 'info');
+            });
+        }
+
+        // 3. CARGAR CONFIGURACIÓN Y CATÁLOGO
         async function cargarConfiguracion() {
             try {
                 const doc = await db.collection('configuracion').doc('tienda').get();
                 if (doc.exists) {
                     nombreTiendaBase = doc.data().nombre;
                 } else {
-                    await db.collection('configuracion').doc('tienda').set({ nombre: nombreTiendaBase });
+                    // Esta línea fallará silenciosamente para usuarios normales por las nuevas reglas de seguridad, 
+                    // pero no afectará la carga de la página.
+                    db.collection('configuracion').doc('tienda').set({ nombre: nombreTiendaBase }).catch(()=>console.log("Solo el admin puede crear config inicial"));
                 }
                 actualizarTextosNombre();
             } catch (error) {
-                console.error("Error cargando nombre de tienda:", error);
                 actualizarTextosNombre();
             }
         }
@@ -328,55 +386,40 @@
                 actualizarTextosNombre();
                 mostrarMensaje('Éxito', 'Nombre de la tienda actualizado.', 'check');
             } catch (error) {
-                mostrarMensaje('Error', 'No se pudo guardar el nombre.', 'alert-triangle');
+                mostrarMensaje('Error', 'No tienes permisos para guardar.', 'alert-triangle');
             }
         }
 
-        // 3. CARGAR INVENTARIO DESDE LA NUBE
         async function cargarInventario() {
             try {
                 const snapshot = await db.collection('productos').get();
-                
                 if (snapshot.empty) {
-                    const inventarioBase = [
-                        { id: 1, nombre: "Botas de Piel Clásicas", categoria: "Hombre", precio: 1850, img: "https://images.unsplash.com/photo-1605812860427-4024433a70fd?auto=format&fit=crop&q=80&w=600" },
-                        { id: 2, nombre: "Zapatos Oxford", categoria: "Hombre", precio: 1400, img: "https://images.unsplash.com/photo-1614252209318-4228af26388f?auto=format&fit=crop&q=80&w=600" },
-                        { id: 3, nombre: "Mocasines de Antelina", categoria: "Unisex", precio: 1200, img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600" },
-                        { id: 4, nombre: "Botines Casuales", categoria: "Mujer", precio: 1650, img: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&q=80&w=600" },
-                        { id: 5, nombre: "Sandalias Artesanales", categoria: "Mujer", precio: 850, img: "https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&q=80&w=600" },
-                        { id: 6, nombre: "Botas de Montar", categoria: "Mujer", precio: 2200, img: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=80&w=600" },
-                        { id: 7, nombre: "Mocasines Clásicos Piel", categoria: "Hombre", precio: 1350, img: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=600" },
-                        { id: 8, nombre: "Zapatos de Vestir Negros", categoria: "Hombre", precio: 1900, img: "https://images.unsplash.com/photo-1614252339460-e1f4220c3cb4?auto=format&fit=crop&q=80&w=600" }
-                    ];
-                    
-                    for (let prod of inventarioBase) {
-                        await db.collection('productos').doc(prod.id.toString()).set(prod);
-                    }
-                    inventario = inventarioBase;
+                    // Si está vacío, ya no puede escribir los productos base automáticamente sin sesión.
+                    // Debe hacerse manualmente desde el admin.
+                    document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-gray-500">Catálogo vacío. Agrega productos desde el panel de administrador.</p>';
                 } else {
                     inventario = snapshot.docs.map(doc => doc.data());
                     inventario.sort((a, b) => a.id - b.id);
-                }
-                
-                renderizarCatalogo();
-                if(!document.getElementById('vista-admin').classList.contains('hidden')){
-                    renderizarAdmin();
+                    renderizarCatalogo();
+                    if(!document.getElementById('vista-admin').classList.contains('hidden')){
+                        renderizarAdmin();
+                    }
                 }
             } catch (error) {
-                console.error("Error cargando de Firebase:", error);
-                document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-red-500">Error al conectar con la base de datos.</p>';
+                document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-red-500">Error al cargar base de datos.</p>';
             }
         }
 
-        // 4. NAVEGACIÓN PROTEGIDA (Contraseña: 2007)
+        // 4. NAVEGACIÓN Y CARRITO
         function cambiarVista(vista) {
             if (vista === 'admin') {
-                const password = prompt("Ingresa la clave de administrador:");
-                if (password !== "2007") {
-                    mostrarMensaje('Acceso Denegado', 'Contraseña incorrecta.', 'lock');
-                    return;
+                if (!auth.currentUser) {
+                    document.getElementById('modal-login').classList.remove('hidden');
+                    document.getElementById('modal-login').classList.add('flex');
+                    return; // Detiene la ejecución, espera el login
                 }
             }
+            
             document.getElementById('vista-inicio').classList.add('hidden');
             document.getElementById('vista-catalogo').classList.add('hidden');
             document.getElementById('vista-checkout').classList.add('hidden');
@@ -389,7 +432,6 @@
             window.scrollTo(0,0);
         }
 
-        // 5. RENDERIZAR CATÁLOGO Y TALLAS
         function renderizarCatalogo() {
             const contenedor = document.getElementById('contenedor-productos');
             contenedor.innerHTML = ''; 
@@ -404,15 +446,11 @@
                             <h3 class="font-serif text-lg text-piel-oscuro mb-1">${producto.nombre}</h3>
                             <p class="text-gray-500 font-semibold mb-3">$${producto.precio.toLocaleString('es-MX')} MXN</p>
                             
-                            <!-- Selector de Talla -->
                             <div class="mb-4 mt-auto">
                                 <label class="text-xs text-gray-500 font-semibold mb-1 block">Talla (MX):</label>
                                 <select id="talla-${producto.id}" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-piel-medio bg-gray-50">
-                                    <option value="25">25</option>
-                                    <option value="26">26</option>
-                                    <option value="27">27</option>
-                                    <option value="28">28</option>
-                                    <option value="29">29</option>
+                                    <option value="25">25</option><option value="26">26</option><option value="27">27</option>
+                                    <option value="28">28</option><option value="29">29</option>
                                 </select>
                             </div>
 
@@ -426,7 +464,6 @@
             feather.replace();
         }
 
-        // 6. LÓGICA DEL CARRITO CON TALLAS
         function toggleCarrito() {
             const modal = document.getElementById('modal-carrito');
             if (modal.classList.contains('hidden')) {
@@ -440,8 +477,6 @@
         function agregarAlCarrito(id) {
             const productoOriginal = inventario.find(p => p.id === id);
             const tallaSeleccionada = document.getElementById(`talla-${id}`).value;
-            
-            // Hacemos una copia del producto y le añadimos la talla
             const productoParaCarrito = { ...productoOriginal, talla: tallaSeleccionada };
             
             carrito.push(productoParaCarrito);
@@ -536,7 +571,7 @@
             setTimeout(() => cambiarVista('inicio'), 3000);
         }
 
-        // 7. FUNCIONES DEL ADMIN (NUEVO CALZADO Y EDICIÓN)
+        // 5. LÓGICA DE ADMINISTRADOR SEGURA
         function renderizarAdmin() {
             const tabla = document.getElementById('tabla-admin');
             tabla.innerHTML = '';
@@ -560,12 +595,11 @@
 
         function abrirModalAdminNuevo() {
             document.getElementById('modal-admin-titulo').innerText = "Agregar Nuevo Calzado";
-            document.getElementById('edit-id').value = ""; // ID vacío significa que es nuevo
+            document.getElementById('edit-id').value = "";
             document.getElementById('edit-nombre').value = "";
             document.getElementById('edit-precio').value = "";
             document.getElementById('edit-categoria').value = "";
             document.getElementById('edit-imagen').value = "";
-            
             document.getElementById('modal-admin-editar').classList.remove('hidden');
             document.getElementById('modal-admin-editar').classList.add('flex');
         }
@@ -578,7 +612,6 @@
             document.getElementById('edit-precio').value = producto.precio;
             document.getElementById('edit-categoria').value = producto.categoria;
             document.getElementById('edit-imagen').value = producto.img;
-            
             document.getElementById('modal-admin-editar').classList.remove('hidden');
             document.getElementById('modal-admin-editar').classList.add('flex');
         }
@@ -592,54 +625,39 @@
         async function guardarEdicionProducto() {
             const btn = document.getElementById('btn-guardar-admin');
             btn.innerText = 'Guardando...';
-
             const idActual = document.getElementById('edit-id').value;
-            const esNuevo = idActual === ""; // Si está vacío, es producto nuevo
-            
-            // Generar ID único basado en el tiempo si es nuevo, sino usar el existente
+            const esNuevo = idActual === ""; 
             const id = esNuevo ? Date.now() : parseInt(idActual); 
-            
             const nuevoNombre = document.getElementById('edit-nombre').value;
             const nuevoPrecio = parseFloat(document.getElementById('edit-precio').value);
             const nuevaCat = document.getElementById('edit-categoria').value;
             const nuevaImg = document.getElementById('edit-imagen').value;
 
             if(!nuevoNombre || !nuevoPrecio || !nuevaImg || !nuevaCat) {
-                mostrarMensaje('Campos Vacíos', 'Por favor llena todos los datos del producto.', 'alert-circle');
+                mostrarMensaje('Campos Vacíos', 'Llena todos los datos.', 'alert-circle');
                 btn.innerText = 'Guardar en Nube';
                 return;
             }
 
             try {
                 if (esNuevo) {
-                    // Crear nuevo documento en Firebase
                     const nuevoProducto = { id: id, nombre: nuevoNombre, precio: nuevoPrecio, img: nuevaImg, categoria: nuevaCat };
                     await db.collection('productos').doc(id.toString()).set(nuevoProducto);
-                    inventario.push(nuevoProducto); // Agregarlo a la vista local
+                    inventario.push(nuevoProducto); 
                 } else {
-                    // Actualizar documento existente
                     await db.collection('productos').doc(id.toString()).update({
-                        nombre: nuevoNombre,
-                        precio: nuevoPrecio,
-                        categoria: nuevaCat,
-                        img: nuevaImg
+                        nombre: nuevoNombre, precio: nuevoPrecio, categoria: nuevaCat, img: nuevaImg
                     });
-                    
-                    // Actualizar vista local
                     let producto = inventario.find(p => p.id === id);
-                    producto.nombre = nuevoNombre;
-                    producto.precio = nuevoPrecio;
-                    producto.categoria = nuevaCat;
-                    producto.img = nuevaImg;
+                    producto.nombre = nuevoNombre; producto.precio = nuevoPrecio;
+                    producto.categoria = nuevaCat; producto.img = nuevaImg;
                 }
-
                 cerrarModalAdmin();
                 renderizarAdmin();
                 renderizarCatalogo();
-                mostrarMensaje('¡Listo!', esNuevo ? 'Calzado agregado exitosamente.' : 'Producto actualizado en la nube.', 'check');
+                mostrarMensaje('¡Listo!', esNuevo ? 'Calzado agregado.' : 'Producto actualizado.', 'check');
             } catch (error) {
-                console.error("Error al guardar:", error);
-                mostrarMensaje('Error', 'No se pudo guardar. Revisa la consola o tu conexión.', 'alert-triangle');
+                mostrarMensaje('Error de Permisos', 'Tu sesión expiró o no tienes permiso para editar.', 'alert-triangle');
                 btn.innerText = 'Guardar en Nube';
             }
         }
@@ -658,483 +676,7 @@
             document.getElementById('modal-mensaje').classList.remove('flex');
         }
 
-        // Ejecutar carga inicial al abrir la página
         cargarConfiguracion();
-        cargarInventario();
-    </script>
-</body>
-</html>                    <button onclick="toggleCarrito()" class="relative text-piel-oscuro">
-                        <i data-feather="shopping-bag"></i>
-                        <span id="contador-carrito-movil" class="absolute -top-2 -right-2 bg-piel-medio text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Contenedor Principal -->
-    <main class="flex-grow">
-        <!-- VISTA 1: INICIO -->
-        <div id="vista-inicio" class="fade-in block">
-            <div class="relative bg-piel-oscuro h-[60vh] flex items-center justify-center overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-40">
-                <div class="relative z-10 text-center px-4">
-                    <h2 class="text-4xl md:text-6xl font-serif text-white mb-4">Herencia en cada paso</h2>
-                    <p class="text-lg md:text-xl text-piel-beige mb-8 font-light max-w-2xl mx-auto">Calzado artesanal confeccionado con la más fina selección de pieles. La tradición de la familia Orozco directo a tus pies.</p>
-                    <button onclick="cambiarVista('catalogo')" class="bg-piel-claro hover:bg-piel-medio text-white px-8 py-3 rounded-sm font-semibold tracking-wide transition duration-300">
-                        Ver Colección
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- VISTA 2: CATÁLOGO -->
-        <div id="vista-catalogo" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-serif text-piel-oscuro mb-2">Nuestra Colección</h2>
-                <div class="h-1 w-20 bg-piel-medio mx-auto"></div>
-            </div>
-            <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <p class="col-span-full text-center text-gray-500">Cargando catálogo desde la nube...</p>
-            </div>
-        </div>
-
-        <!-- VISTA 3: CHECKOUT -->
-        <div id="vista-checkout" class="fade-in hidden max-w-6xl mx-auto px-4 py-12">
-            <h2 class="text-3xl font-serif text-piel-oscuro mb-8 text-center">Finalizar Compra</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- Envío -->
-                    <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
-                        <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
-                            <i data-feather="map-pin"></i> 1. Datos de Envío
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="chk-nombre" placeholder="Nombre completo" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                            <input type="email" id="chk-correo" placeholder="Correo electrónico" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                            <input type="text" id="chk-direccion" placeholder="Dirección completa (Calle y número)" class="border border-gray-300 p-3 rounded-md w-full md:col-span-2 focus:outline-none focus:border-piel-medio">
-                        </div>
-                    </div>
-                    <!-- Pago -->
-                    <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
-                        <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
-                            <i data-feather="credit-card"></i> 2. Método de Pago
-                        </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div id="btn-pago-tarjeta" onclick="seleccionarPago('tarjeta')" class="border-2 border-gray-200 p-4 rounded-md cursor-pointer hover:border-piel-medio transition text-center">
-                                <i data-feather="credit-card" class="mx-auto mb-2 text-piel-oscuro"></i>
-                                <span class="font-semibold text-piel-oscuro">Tarjeta de Crédito/Débito</span>
-                            </div>
-                            <div id="btn-pago-oxxo" onclick="seleccionarPago('oxxo')" class="border-2 border-gray-200 p-4 rounded-md cursor-pointer hover:border-piel-medio transition text-center">
-                                <i data-feather="dollar-sign" class="mx-auto mb-2 text-piel-oscuro"></i>
-                                <span class="font-semibold text-piel-oscuro">Pago en OXXO / Efectivo</span>
-                            </div>
-                        </div>
-                        <div id="formulario-tarjeta" class="hidden mt-6 bg-gray-50 p-4 rounded-md border border-gray-200">
-                            <div class="space-y-4">
-                                <input type="text" id="tarjeta-numero" placeholder="Número de Tarjeta (16 dígitos)" maxlength="16" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                                <input type="text" id="tarjeta-nombre" placeholder="Nombre en la Tarjeta" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input type="text" id="tarjeta-fecha" placeholder="MM/AA" maxlength="5" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                                    <input type="text" id="tarjeta-cvv" placeholder="CVV" maxlength="3" class="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:border-piel-medio">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Resumen Fijo -->
-                <div class="lg:col-span-1">
-                    <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100 sticky top-24">
-                        <h3 class="text-xl font-serif text-piel-oscuro mb-4">Resumen del Pedido</h3>
-                        <div id="checkout-lista" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar"></div>
-                        <div class="border-t border-gray-200 pt-4 flex justify-between items-center mb-6">
-                            <span class="font-semibold text-gray-600">Total a Pagar:</span>
-                            <span id="checkout-total" class="text-2xl font-bold text-piel-oscuro">$0.00 MXN</span>
-                        </div>
-                        <button onclick="procesarCompra()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition">
-                            Confirmar Pedido
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VISTA 4: ADMIN -->
-        <div id="vista-admin" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración (Nube)</h2>
-            </div>
-            <div class="bg-white shadow-sm rounded-md border border-gray-200 overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 text-piel-oscuro font-semibold">
-                            <th class="p-4 border-b">ID</th>
-                            <th class="p-4 border-b">Imagen</th>
-                            <th class="p-4 border-b">Nombre del Producto</th>
-                            <th class="p-4 border-b">Precio</th>
-                            <th class="p-4 border-b">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-admin">
-                        <!-- Se llena con JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-piel-oscuro text-piel-beige py-10 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="font-serif text-2xl mb-4">Orozco Piel</h2>
-            <p class="font-light text-sm opacity-80 mb-6">Tradición familiar en cada puntada. Hecho a mano en México.</p>
-        </div>
-    </footer>
-
-    <!-- MODAL DEL CARRITO LATERAL -->
-    <div id="modal-carrito" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden justify-end transition-opacity">
-        <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col fade-in">
-            <div class="p-6 bg-piel-beige flex justify-between items-center border-b border-piel-claro">
-                <h3 class="text-xl font-serif text-piel-oscuro">Tu Carrito</h3>
-                <button onclick="toggleCarrito()" class="text-gray-500 hover:text-piel-oscuro"><i data-feather="x"></i></button>
-            </div>
-            <div id="carrito-lista" class="flex-grow p-6 overflow-y-auto space-y-4">
-                <p class="text-center text-gray-500 mt-10">Tu carrito está vacío.</p>
-            </div>
-            <div class="p-6 border-t border-gray-200 bg-gray-50">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="font-bold text-gray-700">Total:</span>
-                    <span id="carrito-total" class="font-bold text-xl text-piel-oscuro">$0.00 MXN</span>
-                </div>
-                <button onclick="irACheckout()" class="w-full bg-piel-medio hover:bg-piel-oscuro text-white py-3 rounded-md font-semibold transition">Ir a Pagar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DE MENSAJES -->
-    <div id="modal-mensaje" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-md shadow-xl text-center max-w-sm w-full fade-in">
-            <div id="modal-icono" class="mx-auto mb-4 text-piel-medio flex justify-center"></div>
-            <h3 id="modal-titulo" class="text-2xl font-serif text-piel-oscuro mb-2">Mensaje</h3>
-            <p id="modal-texto" class="text-gray-600 mb-6">Texto del mensaje.</p>
-            <button onclick="cerrarModalMensaje()" class="bg-piel-oscuro text-white px-6 py-2 rounded-md hover:bg-piel-medio transition">Aceptar</button>
-        </div>
-    </div>
-
-    <!-- MODAL EDICIÓN ADMIN -->
-    <div id="modal-admin-editar" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-md shadow-xl max-w-md w-full fade-in">
-            <h3 class="text-2xl font-serif text-piel-oscuro mb-4">Editar Producto</h3>
-            <input type="hidden" id="edit-id">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre</label>
-                    <input type="text" id="edit-nombre" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Precio (MXN)</label>
-                    <input type="number" id="edit-precio" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">URL de la Imagen</label>
-                    <input type="text" id="edit-imagen" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none text-sm">
-                </div>
-            </div>
-            <div class="mt-6 flex justify-end space-x-3">
-                <button onclick="cerrarModalAdmin()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
-                <button id="btn-guardar-admin" onclick="guardarEdicionProducto()" class="bg-piel-medio text-white px-4 py-2 rounded hover:bg-piel-oscuro">Guardar en Nube</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- LÓGICA DE LA TIENDA Y FIREBASE -->
-    <script>
-        feather.replace();
-
-        // 1. CONFIGURACIÓN EXACTA DE TU FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyCuEIxwxD1zzDcIXP6AQ5lJD56G27ZUVoE",
-            authDomain: "pagina-web-4dc43.firebaseapp.com",
-            projectId: "pagina-web-4dc43",
-            storageBucket: "pagina-web-4dc43.firebasestorage.app",
-            messagingSenderId: "231237683155",
-            appId: "1:231237683155:web:ee4de7e793b61f2cbfd126"
-        };
-
-        // Inicializar Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let inventario = [];
-        let carrito = [];
-        let metodoPagoSeleccionado = null;
-
-        // 2. CARGAR INVENTARIO DESDE LA NUBE
-        async function cargarInventario() {
-            try {
-                const snapshot = await db.collection('productos').get();
-                
-                if (snapshot.empty) {
-                    const inventarioBase = [
-                        { id: 1, nombre: "Botas de Piel Clásicas", categoria: "Hombre", precio: 1850, img: "https://images.unsplash.com/photo-1605812860427-4024433a70fd?auto=format&fit=crop&q=80&w=600" },
-                        { id: 2, nombre: "Zapatos Oxford", categoria: "Hombre", precio: 1400, img: "https://images.unsplash.com/photo-1614252209318-4228af26388f?auto=format&fit=crop&q=80&w=600" },
-                        { id: 3, nombre: "Mocasines de Antelina", categoria: "Unisex", precio: 1200, img: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=600" },
-                        { id: 4, nombre: "Botines Casuales", categoria: "Mujer", precio: 1650, img: "https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&q=80&w=600" },
-                        { id: 5, nombre: "Sandalias Artesanales", categoria: "Mujer", precio: 850, img: "https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&q=80&w=600" },
-                        { id: 6, nombre: "Botas de Montar", categoria: "Mujer", precio: 2200, img: "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&q=80&w=600" },
-                        { id: 7, nombre: "Mocasines Clásicos Piel", categoria: "Hombre", precio: 1350, img: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=600" },
-                        { id: 8, nombre: "Zapatos de Vestir Negros", categoria: "Hombre", precio: 1900, img: "https://images.unsplash.com/photo-1614252339460-e1f4220c3cb4?auto=format&fit=crop&q=80&w=600" }
-                    ];
-                    
-                    for (let prod of inventarioBase) {
-                        await db.collection('productos').doc(prod.id.toString()).set(prod);
-                    }
-                    inventario = inventarioBase;
-                } else {
-                    inventario = snapshot.docs.map(doc => doc.data());
-                    inventario.sort((a, b) => a.id - b.id);
-                }
-                
-                renderizarCatalogo();
-                if(!document.getElementById('vista-admin').classList.contains('hidden')){
-                    renderizarAdmin();
-                }
-            } catch (error) {
-                console.error("Error cargando de Firebase:", error);
-                document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-red-500">Error al conectar con la base de datos.</p>';
-            }
-        }
-
-        // 3. NAVEGACIÓN PROTEGIDA
-        function cambiarVista(vista) {
-            if (vista === 'admin') {
-                const password = prompt("Ingresa la clave de administrador (es 1234):");
-                if (password !== "1234") {
-                    mostrarMensaje('Acceso Denegado', 'Contraseña incorrecta.', 'lock');
-                    return;
-                }
-            }
-            document.getElementById('vista-inicio').classList.add('hidden');
-            document.getElementById('vista-catalogo').classList.add('hidden');
-            document.getElementById('vista-checkout').classList.add('hidden');
-            document.getElementById('vista-admin').classList.add('hidden');
-            
-            document.getElementById('vista-' + vista).classList.remove('hidden');
-            
-            if(vista === 'catalogo') renderizarCatalogo();
-            if(vista === 'admin') renderizarAdmin();
-            window.scrollTo(0,0);
-        }
-
-        // 4. FUNCIONES DE VISTAS Y CARRITO
-        function renderizarCatalogo() {
-            const contenedor = document.getElementById('contenedor-productos');
-            contenedor.innerHTML = ''; 
-            inventario.forEach(producto => {
-                contenedor.innerHTML += `
-                    <div class="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-xl transition duration-300 transform hover:-translate-y-1 group">
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="${producto.img}" alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <span class="absolute top-2 left-2 bg-white px-2 py-1 text-xs font-bold text-piel-oscuro rounded shadow opacity-90">${producto.categoria}</span>
-                        </div>
-                        <div class="p-5 text-center">
-                            <h3 class="font-serif text-lg text-piel-oscuro mb-1">${producto.nombre}</h3>
-                            <p class="text-gray-500 font-semibold mb-4">$${producto.precio.toLocaleString('es-MX')} MXN</p>
-                            <button onclick="agregarAlCarrito(${producto.id})" class="w-full bg-transparent border border-piel-medio text-piel-medio hover:bg-piel-medio hover:text-white py-2 rounded transition flex items-center justify-center gap-2">
-                                <i data-feather="shopping-cart" class="w-4 h-4"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            feather.replace();
-        }
-
-        function toggleCarrito() {
-            const modal = document.getElementById('modal-carrito');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden'); modal.classList.add('flex');
-                actualizarVisualCarrito();
-            } else {
-                modal.classList.add('hidden'); modal.classList.remove('flex');
-            }
-        }
-
-        function agregarAlCarrito(id) {
-            const producto = inventario.find(p => p.id === id);
-            carrito.push(producto);
-            document.getElementById('contador-carrito').innerText = carrito.length;
-            document.getElementById('contador-carrito-movil').innerText = carrito.length;
-            mostrarMensaje('¡Agregado!', `${producto.nombre} se añadió a tu carrito.`, 'check-circle');
-        }
-
-        function eliminarDelCarrito(index) {
-            carrito.splice(index, 1);
-            document.getElementById('contador-carrito').innerText = carrito.length;
-            document.getElementById('contador-carrito-movil').innerText = carrito.length;
-            actualizarVisualCarrito();
-            actualizarVisualCheckout();
-        }
-
-        function actualizarVisualCarrito() {
-            const contenedor = document.getElementById('carrito-lista');
-            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
-            if (carrito.length === 0) {
-                contenedor.innerHTML = '<p class="text-center text-gray-500 mt-10">Tu carrito está vacío.</p>';
-                document.getElementById('carrito-total').innerText = '$0.00 MXN';
-                return;
-            }
-            contenedor.innerHTML = '';
-            carrito.forEach((prod, index) => {
-                contenedor.innerHTML += `
-                    <div class="flex items-center gap-4 border-b border-gray-100 pb-4">
-                        <img src="${prod.img}" class="w-16 h-16 object-cover rounded">
-                        <div class="flex-grow">
-                            <h4 class="text-sm font-semibold text-piel-oscuro">${prod.nombre}</h4>
-                            <p class="text-sm text-gray-500">$${prod.precio.toLocaleString('es-MX')} MXN</p>
-                        </div>
-                        <button onclick="eliminarDelCarrito(${index})" class="text-red-400 hover:text-red-600"><i data-feather="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                `;
-            });
-            document.getElementById('carrito-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
-            feather.replace();
-        }
-
-        function irACheckout() {
-            if(carrito.length === 0) {
-                mostrarMensaje('Carrito Vacío', 'Agrega productos antes de pagar.', 'alert-circle');
-                return;
-            }
-            toggleCarrito();
-            cambiarVista('checkout');
-            const contenedor = document.getElementById('checkout-lista');
-            contenedor.innerHTML = '';
-            carrito.forEach(prod => {
-                contenedor.innerHTML += `
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">${prod.nombre}</span>
-                        <span class="font-semibold text-piel-oscuro">$${prod.precio.toLocaleString('es-MX')}</span>
-                    </div>
-                `;
-            });
-            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
-            document.getElementById('checkout-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
-        }
-
-        function seleccionarPago(metodo) {
-            metodoPagoSeleccionado = metodo;
-            const btnTarjeta = document.getElementById('btn-pago-tarjeta');
-            const btnOxxo = document.getElementById('btn-pago-oxxo');
-            const formTarjeta = document.getElementById('formulario-tarjeta');
-            btnTarjeta.classList.remove('border-piel-medio', 'bg-piel-beige');
-            btnOxxo.classList.remove('border-piel-medio', 'bg-piel-beige');
-            if (metodo === 'tarjeta') {
-                btnTarjeta.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.remove('hidden');
-            } else {
-                btnOxxo.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.add('hidden');
-            }
-        }
-
-        function procesarCompra() {
-            if(!metodoPagoSeleccionado) {
-                mostrarMensaje('Faltan Datos', 'Por favor selecciona un método de pago.', 'alert-circle');
-                return;
-            }
-            mostrarMensaje('¡Pedido Confirmado!', `Gracias por tu compra.`, 'check-circle');
-            carrito = [];
-            document.getElementById('contador-carrito').innerText = 0;
-            document.getElementById('contador-carrito-movil').innerText = 0;
-            setTimeout(() => cambiarVista('inicio'), 3000);
-        }
-
-        // 5. FUNCIONES DEL ADMIN ACTUALIZADAS CON FIREBASE
-        function renderizarAdmin() {
-            const tabla = document.getElementById('tabla-admin');
-            tabla.innerHTML = '';
-            inventario.forEach(prod => {
-                tabla.innerHTML += `
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="p-4 text-gray-500">#${prod.id}</td>
-                        <td class="p-4"><img src="${prod.img}" class="w-12 h-12 object-cover rounded"></td>
-                        <td class="p-4 font-semibold text-gray-700">${prod.nombre}</td>
-                        <td class="p-4 text-piel-oscuro font-bold">$${prod.precio}</td>
-                        <td class="p-4">
-                            <button onclick="abrirModalAdmin(${prod.id})" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1">
-                                <i data-feather="edit-2" class="w-4 h-4"></i> Editar
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            feather.replace();
-        }
-
-        function abrirModalAdmin(id) {
-            const producto = inventario.find(p => p.id === id);
-            document.getElementById('edit-id').value = producto.id;
-            document.getElementById('edit-nombre').value = producto.nombre;
-            document.getElementById('edit-precio').value = producto.precio;
-            document.getElementById('edit-imagen').value = producto.img;
-            document.getElementById('modal-admin-editar').classList.remove('hidden');
-            document.getElementById('modal-admin-editar').classList.add('flex');
-        }
-
-        function cerrarModalAdmin() {
-            document.getElementById('modal-admin-editar').classList.add('hidden');
-            document.getElementById('modal-admin-editar').classList.remove('flex');
-            document.getElementById('btn-guardar-admin').innerText = 'Guardar en Nube';
-        }
-
-        async function guardarEdicionProducto() {
-            const btn = document.getElementById('btn-guardar-admin');
-            btn.innerText = 'Guardando...';
-
-            const id = parseInt(document.getElementById('edit-id').value);
-            const nuevoNombre = document.getElementById('edit-nombre').value;
-            const nuevoPrecio = parseFloat(document.getElementById('edit-precio').value);
-            const nuevaImg = document.getElementById('edit-imagen').value;
-
-            try {
-                await db.collection('productos').doc(id.toString()).update({
-                    nombre: nuevoNombre,
-                    precio: nuevoPrecio,
-                    img: nuevaImg
-                });
-
-                let producto = inventario.find(p => p.id === id);
-                producto.nombre = nuevoNombre;
-                producto.precio = nuevoPrecio;
-                producto.img = nuevaImg;
-
-                cerrarModalAdmin();
-                renderizarAdmin();
-                renderizarCatalogo();
-                mostrarMensaje('Actualizado', 'Guardado en la nube exitosamente.', 'check');
-            } catch (error) {
-                console.error("Error al actualizar:", error);
-                mostrarMensaje('Error', 'No se pudo guardar en la base de datos. Revisa las reglas de seguridad.', 'alert-triangle');
-                btn.innerText = 'Guardar en Nube';
-            }
-        }
-
-        function mostrarMensaje(titulo, texto, icono) {
-            document.getElementById('modal-titulo').innerText = titulo;
-            document.getElementById('modal-texto').innerText = texto;
-            document.getElementById('modal-icono').innerHTML = `<i data-feather="${icono}" class="w-12 h-12"></i>`;
-            document.getElementById('modal-mensaje').classList.remove('hidden');
-            document.getElementById('modal-mensaje').classList.add('flex');
-            feather.replace();
-        }
-
-        function cerrarModalMensaje() {
-            document.getElementById('modal-mensaje').classList.add('hidden');
-            document.getElementById('modal-mensaje').classList.remove('flex');
-        }
-
-        // Ejecutar carga inicial al abrir la página
         cargarInventario();
     </script>
 </body>
