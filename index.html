@@ -40,6 +40,8 @@
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Mejora sutil para imágenes */
+        .img-zoom:hover img { transform: scale(1.08); }
     </style>
 </head>
 <body class="bg-piel-beige text-gray-800 font-sans flex flex-col min-h-screen">
@@ -48,62 +50,161 @@
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="cambiarVista('inicio')">
                     <h1 class="font-serif text-3xl font-bold text-piel-oscuro nombre-tienda">Orozco Piel</h1>
                 </div>
+                <!-- Menú Desktop -->
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#" onclick="cambiarVista('inicio')" class="text-gray-600 hover:text-piel-medio transition">Inicio</a>
                     <a href="#" onclick="cambiarVista('catalogo')" class="text-gray-600 hover:text-piel-medio transition">Catálogo</a>
                     <a href="#" onclick="cambiarVista('admin')" class="text-piel-medio font-semibold hover:text-piel-oscuro transition flex items-center gap-1">
                         <i data-feather="settings" class="w-4 h-4"></i> Admin
                     </a>
-                    <button onclick="toggleCarrito()" class="relative text-piel-oscuro hover:text-piel-medio transition">
+                    <button onclick="toggleCarrito()" class="relative text-piel-oscuro hover:text-piel-medio transition transform hover:scale-110">
                         <i data-feather="shopping-bag"></i>
                         <span id="contador-carrito" class="absolute -top-2 -right-2 bg-piel-medio text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </button>
                 </div>
+                <!-- Menú Móvil (Botones) -->
                 <div class="md:hidden flex items-center gap-4">
                     <button onclick="toggleCarrito()" class="relative text-piel-oscuro">
                         <i data-feather="shopping-bag"></i>
                         <span id="contador-carrito-movil" class="absolute -top-2 -right-2 bg-piel-medio text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </button>
+                    <button onclick="toggleMenuMovil()" class="text-piel-oscuro focus:outline-none">
+                        <i data-feather="menu"></i>
+                    </button>
                 </div>
+            </div>
+        </div>
+        <!-- Desplegable Menú Móvil -->
+        <div id="menu-movil" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-md z-30 transition-all">
+            <div class="flex flex-col px-4 py-4 space-y-4">
+                <a href="#" onclick="cambiarVista('inicio'); toggleMenuMovil()" class="text-gray-700 font-medium">Inicio</a>
+                <a href="#" onclick="cambiarVista('catalogo'); toggleMenuMovil()" class="text-gray-700 font-medium">Catálogo</a>
+                <a href="#" onclick="cambiarVista('admin'); toggleMenuMovil()" class="text-piel-medio font-semibold flex items-center gap-2"><i data-feather="settings" class="w-4 h-4"></i> Admin</a>
             </div>
         </div>
     </nav>
 
     <!-- Contenedor Principal -->
     <main class="flex-grow">
-        <!-- VISTA 1: INICIO -->
+        
+        <!-- ================= VISTA 1: INICIO (REDISEÑADA) ================= -->
         <div id="vista-inicio" class="fade-in block">
-            <div class="relative bg-piel-oscuro h-[60vh] flex items-center justify-center overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-40">
-                <div class="relative z-10 text-center px-4">
-                    <h2 class="text-4xl md:text-6xl font-serif text-white mb-4">Herencia en cada paso</h2>
-                    <p class="text-lg md:text-xl text-piel-beige mb-8 font-light max-w-2xl mx-auto">Calzado artesanal confeccionado con la más fina selección de pieles. Tradición directo a tus pies.</p>
-                    <button onclick="cambiarVista('catalogo')" class="bg-piel-claro hover:bg-piel-medio text-white px-8 py-3 rounded-sm font-semibold tracking-wide transition duration-300">
-                        Ver Colección
+            <!-- Banner Principal Dinámico -->
+            <div class="relative bg-black h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
+                <img id="banner-inicio-img" src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-1000 transform hover:scale-105">
+                <div class="relative z-10 text-center px-4 fade-in">
+                    <h2 class="text-4xl md:text-6xl font-serif text-white mb-4 shadow-sm">Herencia en cada paso</h2>
+                    <p class="text-lg md:text-xl text-gray-200 mb-8 font-light max-w-2xl mx-auto drop-shadow-md">Calzado artesanal confeccionado con la más fina selección de pieles. Tradición directo a tus pies.</p>
+                    <button onclick="cambiarVista('catalogo')" class="bg-piel-claro hover:bg-white hover:text-piel-oscuro text-white px-8 py-3 rounded-sm font-semibold tracking-wide transition duration-300 shadow-lg">
+                        Ver Colección Completa
                     </button>
+                </div>
+            </div>
+
+            <!-- Sección Ventajas -->
+            <div class="bg-white py-12 border-b border-gray-100">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="flex flex-col items-center p-4">
+                        <div class="bg-piel-beige p-4 rounded-full mb-4 text-piel-oscuro"><i data-feather="scissors" class="w-8 h-8"></i></div>
+                        <h3 class="font-serif text-xl text-piel-oscuro mb-2">Hecho a Mano</h3>
+                        <p class="text-gray-500 text-sm">Artesanía detallada por maestros zapateros mexicanos.</p>
+                    </div>
+                    <div class="flex flex-col items-center p-4">
+                        <div class="bg-piel-beige p-4 rounded-full mb-4 text-piel-oscuro"><i data-feather="shield" class="w-8 h-8"></i></div>
+                        <h3 class="font-serif text-xl text-piel-oscuro mb-2">Calidad Premium</h3>
+                        <p class="text-gray-500 text-sm">Selección de pieles genuinas de la más alta resistencia.</p>
+                    </div>
+                    <div class="flex flex-col items-center p-4">
+                        <div class="bg-piel-beige p-4 rounded-full mb-4 text-piel-oscuro"><i data-feather="truck" class="w-8 h-8"></i></div>
+                        <h3 class="font-serif text-xl text-piel-oscuro mb-2">Envío Seguro</h3>
+                        <p class="text-gray-500 text-sm">Envíos a todo el país empacados con máximo cuidado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Categorías Visuales -->
+            <div class="py-16 bg-piel-beige">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-serif text-piel-oscuro mb-2">Comprar por Categoría</h2>
+                        <div class="h-1 w-16 bg-piel-medio mx-auto"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div onclick="cambiarVista('catalogo', 'Hombre')" class="relative h-80 rounded-md overflow-hidden cursor-pointer group img-zoom shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1614252339460-e1f4220c3cb4?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition duration-300"></div>
+                            <div class="absolute bottom-6 left-6">
+                                <h3 class="text-2xl font-serif text-white mb-1 drop-shadow-md">Hombre</h3>
+                                <span class="text-white text-sm font-semibold border-b border-white pb-1">Explorar</span>
+                            </div>
+                        </div>
+                        <div onclick="cambiarVista('catalogo', 'Mujer')" class="relative h-80 rounded-md overflow-hidden cursor-pointer group img-zoom shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1638247025967-b4e38f787b76?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition duration-300"></div>
+                            <div class="absolute bottom-6 left-6">
+                                <h3 class="text-2xl font-serif text-white mb-1 drop-shadow-md">Mujer</h3>
+                                <span class="text-white text-sm font-semibold border-b border-white pb-1">Explorar</span>
+                            </div>
+                        </div>
+                        <div onclick="cambiarVista('catalogo', 'Unisex')" class="relative h-80 rounded-md overflow-hidden cursor-pointer group img-zoom shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition-transform duration-700">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition duration-300"></div>
+                            <div class="absolute bottom-6 left-6">
+                                <h3 class="text-2xl font-serif text-white mb-1 drop-shadow-md">Unisex</h3>
+                                <span class="text-white text-sm font-semibold border-b border-white pb-1">Explorar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Productos Destacados -->
+            <div class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex justify-between items-end mb-10">
+                        <div>
+                            <h2 class="text-3xl font-serif text-piel-oscuro mb-2">Productos Destacados</h2>
+                            <div class="h-1 w-16 bg-piel-medio"></div>
+                        </div>
+                        <button onclick="cambiarVista('catalogo')" class="text-piel-medio font-semibold hover:text-piel-oscuro hidden md:block">Ver todos &rarr;</button>
+                    </div>
+                    <div id="contenedor-destacados" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <p class="text-gray-500">Cargando destacados...</p>
+                    </div>
+                    <div class="mt-8 text-center md:hidden">
+                        <button onclick="cambiarVista('catalogo')" class="text-piel-medio font-semibold hover:text-piel-oscuro border border-piel-medio px-6 py-2 rounded">Ver catálogo completo</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA 2: CATÁLOGO -->
+        <!-- ================= VISTA 2: CATÁLOGO ================= -->
         <div id="vista-catalogo" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-serif text-piel-oscuro mb-2">Nuestra Colección</h2>
-                <div class="h-1 w-20 bg-piel-medio mx-auto"></div>
+            <div class="text-center mb-10">
+                <h2 id="titulo-catalogo" class="text-3xl font-serif text-piel-oscuro mb-2">Nuestra Colección</h2>
+                <div class="h-1 w-20 bg-piel-medio mx-auto mb-6"></div>
+                <!-- Filtros rápidos -->
+                <div class="flex justify-center gap-4 text-sm font-semibold text-gray-500">
+                    <button onclick="renderizarCatalogo('Todas')" class="hover:text-piel-oscuro focus:text-piel-oscuro">Ver Todo</button> |
+                    <button onclick="renderizarCatalogo('Hombre')" class="hover:text-piel-oscuro focus:text-piel-oscuro">Hombre</button> |
+                    <button onclick="renderizarCatalogo('Mujer')" class="hover:text-piel-oscuro focus:text-piel-oscuro">Mujer</button>
+                </div>
             </div>
             <div id="contenedor-productos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <p class="col-span-full text-center text-gray-500">Cargando catálogo desde la nube...</p>
+                <!-- Se llena con JS -->
             </div>
         </div>
 
-        <!-- VISTA 3: CHECKOUT -->
+        <!-- ================= VISTA 3: CHECKOUT ================= -->
         <div id="vista-checkout" class="fade-in hidden max-w-6xl mx-auto px-4 py-12">
             <h2 class="text-3xl font-serif text-piel-oscuro mb-8 text-center">Finalizar Compra</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div class="lg:col-span-2 space-y-8">
+                    <!-- Envío -->
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
                             <i data-feather="map-pin"></i> 1. Datos de Envío
@@ -114,6 +215,7 @@
                             <input type="text" id="chk-direccion" placeholder="Dirección completa (Calle y número)" class="border border-gray-300 p-3 rounded-md w-full md:col-span-2 focus:outline-none focus:border-piel-medio">
                         </div>
                     </div>
+                    <!-- Pago -->
                     <div class="bg-white p-6 shadow-sm rounded-md border border-gray-100">
                         <h3 class="text-xl font-serif text-piel-oscuro mb-4 flex items-center gap-2">
                             <i data-feather="credit-card"></i> 2. Método de Pago
@@ -148,7 +250,7 @@
                             <span class="font-semibold text-gray-600">Total a Pagar:</span>
                             <span id="checkout-total" class="text-2xl font-bold text-piel-oscuro">$0.00 MXN</span>
                         </div>
-                        <button onclick="procesarCompra()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition">
+                        <button onclick="procesarCompra()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition shadow-md hover:shadow-lg">
                             Confirmar Pedido
                         </button>
                     </div>
@@ -156,31 +258,41 @@
             </div>
         </div>
 
-        <!-- VISTA 4: ADMIN -->
+        <!-- ================= VISTA 4: ADMIN ================= -->
         <div id="vista-admin" class="fade-in hidden max-w-7xl mx-auto px-4 py-12">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración (Seguro)</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-3xl font-serif text-piel-oscuro">Panel de Administración</h2>
                 <button onclick="cerrarSesionAdmin()" class="text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 transition">
                     <i data-feather="log-out" class="w-4 h-4"></i> Cerrar Sesión
                 </button>
             </div>
             
-            <div class="mb-8 bg-white p-6 shadow-sm rounded-md border border-gray-200">
-                <h3 class="text-xl font-serif text-piel-oscuro mb-4">Configuración de la Tienda</h3>
-                <div class="flex items-end gap-4">
-                    <div class="flex-grow">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Oficial de la Tienda</label>
+            <!-- Configuraciones de Diseño y Marca -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Nombre -->
+                <div class="bg-white p-6 shadow-sm rounded-md border border-gray-200">
+                    <h3 class="text-xl font-serif text-piel-oscuro mb-4">Configurar Marca</h3>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nombre Oficial de la Tienda</label>
+                    <div class="flex items-end gap-2">
                         <input type="text" id="input-nombre-tienda" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none" placeholder="Ej: Orozco Piel">
+                        <button onclick="guardarNombreTienda()" class="bg-piel-oscuro hover:bg-piel-medio text-white px-4 py-2 rounded font-semibold transition">Guardar</button>
                     </div>
-                    <button onclick="guardarNombreTienda()" class="bg-piel-oscuro hover:bg-piel-medio text-white px-6 py-2 rounded font-semibold transition">
-                        Guardar Nombre
-                    </button>
+                </div>
+                <!-- Banner -->
+                <div class="bg-white p-6 shadow-sm rounded-md border border-gray-200">
+                    <h3 class="text-xl font-serif text-piel-oscuro mb-4">Personalizar Diseño</h3>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">URL de la Imagen del Banner Inicial</label>
+                    <div class="flex items-end gap-2">
+                        <input type="text" id="input-url-banner" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none text-sm" placeholder="https://ejemplo.com/foto.jpg">
+                        <button onclick="guardarBannerTienda()" class="bg-piel-oscuro hover:bg-piel-medio text-white px-4 py-2 rounded font-semibold transition">Aplicar</button>
+                    </div>
                 </div>
             </div>
 
+            <!-- Inventario -->
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-serif text-piel-oscuro">Inventario de Productos</h3>
-                <button onclick="abrirModalAdminNuevo()" class="bg-piel-claro hover:bg-piel-medio text-white px-4 py-2 rounded font-semibold flex items-center gap-2 transition">
+                <button onclick="abrirModalAdminNuevo()" class="bg-piel-claro hover:bg-piel-medio text-white px-4 py-2 rounded font-semibold flex items-center gap-2 transition shadow-sm">
                     <i data-feather="plus" class="w-4 h-4"></i> Agregar Calzado
                 </button>
             </div>
@@ -214,7 +326,7 @@
 
     <!-- MODAL INICIO DE SESIÓN -->
     <div id="modal-login" class="fixed inset-0 bg-black bg-opacity-50 z-[70] hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-md shadow-xl max-w-sm w-full fade-in">
+        <div class="bg-white p-8 rounded-md shadow-2xl max-w-sm w-full fade-in">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-serif text-piel-oscuro">Iniciar Sesión</h3>
                 <button onclick="cerrarModalLogin()" class="text-gray-400 hover:text-gray-700"><i data-feather="x"></i></button>
@@ -229,9 +341,7 @@
                     <input type="password" id="login-pass" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none">
                 </div>
             </div>
-            <button onclick="procesarLogin()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition mt-6">
-                Entrar
-            </button>
+            <button onclick="procesarLogin()" class="w-full bg-piel-oscuro hover:bg-piel-medio text-white py-3 rounded-md font-semibold transition mt-6">Entrar</button>
         </div>
     </div>
 
@@ -240,7 +350,7 @@
         <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col fade-in">
             <div class="p-6 bg-piel-beige flex justify-between items-center border-b border-piel-claro">
                 <h3 class="text-xl font-serif text-piel-oscuro">Tu Carrito</h3>
-                <button onclick="toggleCarrito()" class="text-gray-500 hover:text-piel-oscuro"><i data-feather="x"></i></button>
+                <button onclick="toggleCarrito()" class="text-gray-500 hover:text-piel-oscuro transform hover:rotate-90 transition duration-300"><i data-feather="x"></i></button>
             </div>
             <div id="carrito-lista" class="flex-grow p-6 overflow-y-auto space-y-4">
                 <p class="text-center text-gray-500 mt-10">Tu carrito está vacío.</p>
@@ -250,14 +360,14 @@
                     <span class="font-bold text-gray-700">Total:</span>
                     <span id="carrito-total" class="font-bold text-xl text-piel-oscuro">$0.00 MXN</span>
                 </div>
-                <button onclick="irACheckout()" class="w-full bg-piel-medio hover:bg-piel-oscuro text-white py-3 rounded-md font-semibold transition">Ir a Pagar</button>
+                <button onclick="irACheckout()" class="w-full bg-piel-medio hover:bg-piel-oscuro text-white py-3 rounded-md font-semibold transition shadow">Ir a Pagar</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL DE MENSAJES -->
     <div id="modal-mensaje" class="fixed inset-0 bg-black bg-opacity-50 z-[80] hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-md shadow-xl text-center max-w-sm w-full fade-in">
+        <div class="bg-white p-8 rounded-md shadow-2xl text-center max-w-sm w-full fade-in transform scale-100">
             <div id="modal-icono" class="mx-auto mb-4 text-piel-medio flex justify-center"></div>
             <h3 id="modal-titulo" class="text-2xl font-serif text-piel-oscuro mb-2">Mensaje</h3>
             <p id="modal-texto" class="text-gray-600 mb-6">Texto del mensaje.</p>
@@ -267,7 +377,7 @@
 
     <!-- MODAL EDICIÓN ADMIN -->
     <div id="modal-admin-editar" class="fixed inset-0 bg-black bg-opacity-50 z-[60] hidden items-center justify-center">
-        <div class="bg-white p-8 rounded-md shadow-xl max-w-md w-full fade-in">
+        <div class="bg-white p-8 rounded-md shadow-2xl max-w-md w-full fade-in">
             <h3 id="modal-admin-titulo" class="text-2xl font-serif text-piel-oscuro mb-4">Editar Producto</h3>
             <input type="hidden" id="edit-id">
             <div class="space-y-4">
@@ -281,7 +391,11 @@
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Categoría</label>
-                    <input type="text" id="edit-categoria" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none text-sm">
+                    <select id="edit-categoria" class="w-full border border-gray-300 p-2 rounded focus:border-piel-medio outline-none text-sm bg-white">
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="Unisex">Unisex</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-1">URL de la Imagen</label>
@@ -290,12 +404,12 @@
             </div>
             <div class="mt-6 flex justify-end space-x-3">
                 <button onclick="cerrarModalAdmin()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancelar</button>
-                <button id="btn-guardar-admin" onclick="guardarEdicionProducto()" class="bg-piel-medio text-white px-4 py-2 rounded hover:bg-piel-oscuro">Guardar en Nube</button>
+                <button id="btn-guardar-admin" onclick="guardarEdicionProducto()" class="bg-piel-medio text-white px-4 py-2 rounded hover:bg-piel-oscuro transition">Guardar en Nube</button>
             </div>
         </div>
     </div>
 
-    <!-- LÓGICA DE LA TIENDA -->
+    <!-- LÓGICA DE LA TIENDA Y FIREBASE -->
     <script>
         feather.replace();
 
@@ -317,8 +431,15 @@
         let carrito = [];
         let metodoPagoSeleccionado = null;
         let nombreTiendaBase = "Orozco Piel";
+        let bannerTiendaBase = "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=2000";
 
-        // 2. SISTEMA DE AUTENTICACIÓN
+        // 2. UTILIDADES DE MENÚ Y UI
+        function toggleMenuMovil() {
+            const menu = document.getElementById('menu-movil');
+            menu.classList.toggle('hidden');
+        }
+
+        // 3. SISTEMA DE AUTENTICACIÓN
         function cerrarModalLogin() {
             document.getElementById('modal-login').classList.add('hidden');
             document.getElementById('modal-login').classList.remove('flex');
@@ -327,355 +448,304 @@
         async function procesarLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
-            
-            if(!email || !pass) {
-                mostrarMensaje('Error', 'Ingresa correo y contraseña.', 'alert-circle');
-                return;
-            }
-
+            if(!email || !pass) { mostrarMensaje('Error', 'Ingresa correo y contraseña.', 'alert-circle'); return; }
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
-                cerrarModalLogin();
-                cambiarVista('admin');
-                mostrarMensaje('Bienvenido', 'Has iniciado sesión correctamente.', 'check-circle');
-                document.getElementById('login-email').value = '';
-                document.getElementById('login-pass').value = '';
+                cerrarModalLogin(); cambiarVista('admin');
+                document.getElementById('login-email').value = ''; document.getElementById('login-pass').value = '';
             } catch (error) {
-                console.error(error);
                 mostrarMensaje('Acceso Denegado', 'Correo o contraseña incorrectos.', 'lock');
             }
         }
 
         function cerrarSesionAdmin() {
-            auth.signOut().then(() => {
-                cambiarVista('inicio');
-                mostrarMensaje('Sesión Cerrada', 'Has salido del panel de administrador.', 'info');
-            });
+            auth.signOut().then(() => { cambiarVista('inicio'); mostrarMensaje('Sesión Cerrada', 'Has salido del panel.', 'info'); });
         }
 
-        // 3. CARGAR CONFIGURACIÓN Y CATÁLOGO
+        // 4. CARGAR CONFIGURACIÓN (Nombre y Banner)
         async function cargarConfiguracion() {
             try {
                 const doc = await db.collection('configuracion').doc('tienda').get();
                 if (doc.exists) {
-                    nombreTiendaBase = doc.data().nombre;
-                } else {
-                    // Esta línea fallará silenciosamente para usuarios normales por las nuevas reglas de seguridad, 
-                    // pero no afectará la carga de la página.
-                    db.collection('configuracion').doc('tienda').set({ nombre: nombreTiendaBase }).catch(()=>console.log("Solo el admin puede crear config inicial"));
+                    if(doc.data().nombre) nombreTiendaBase = doc.data().nombre;
+                    if(doc.data().banner) bannerTiendaBase = doc.data().banner;
                 }
-                actualizarTextosNombre();
-            } catch (error) {
-                actualizarTextosNombre();
-            }
+                aplicarConfiguracionUI();
+            } catch (error) { aplicarConfiguracionUI(); }
         }
 
-        function actualizarTextosNombre() {
-            const elementosNombre = document.querySelectorAll('.nombre-tienda');
-            elementosNombre.forEach(el => el.innerText = nombreTiendaBase);
-            const inputAdmin = document.getElementById('input-nombre-tienda');
-            if (inputAdmin) inputAdmin.value = nombreTiendaBase;
+        function aplicarConfiguracionUI() {
+            document.querySelectorAll('.nombre-tienda').forEach(el => el.innerText = nombreTiendaBase);
+            if (document.getElementById('input-nombre-tienda')) document.getElementById('input-nombre-tienda').value = nombreTiendaBase;
+            
+            document.getElementById('banner-inicio-img').src = bannerTiendaBase;
+            if (document.getElementById('input-url-banner')) document.getElementById('input-url-banner').value = bannerTiendaBase;
         }
 
         async function guardarNombreTienda() {
             const nuevoNombre = document.getElementById('input-nombre-tienda').value;
             if(!nuevoNombre) return;
             try {
-                await db.collection('configuracion').doc('tienda').set({ nombre: nuevoNombre });
-                nombreTiendaBase = nuevoNombre;
-                actualizarTextosNombre();
-                mostrarMensaje('Éxito', 'Nombre de la tienda actualizado.', 'check');
-            } catch (error) {
-                mostrarMensaje('Error', 'No tienes permisos para guardar.', 'alert-triangle');
-            }
+                await db.collection('configuracion').doc('tienda').set({ nombre: nuevoNombre }, { merge: true });
+                nombreTiendaBase = nuevoNombre; aplicarConfiguracionUI();
+                mostrarMensaje('Éxito', 'Nombre actualizado.', 'check');
+            } catch (error) { mostrarMensaje('Error', 'Permisos insuficientes.', 'alert-triangle'); }
         }
 
+        async function guardarBannerTienda() {
+            const nuevaUrl = document.getElementById('input-url-banner').value;
+            if(!nuevaUrl) return;
+            try {
+                await db.collection('configuracion').doc('tienda').set({ banner: nuevaUrl }, { merge: true });
+                bannerTiendaBase = nuevaUrl; aplicarConfiguracionUI();
+                mostrarMensaje('Éxito', 'Banner actualizado en la página principal.', 'image');
+            } catch (error) { mostrarMensaje('Error', 'Permisos insuficientes.', 'alert-triangle'); }
+        }
+
+        // 5. CARGAR INVENTARIO Y RENDERIZADO REUTILIZABLE
         async function cargarInventario() {
             try {
                 const snapshot = await db.collection('productos').get();
-                if (snapshot.empty) {
-                    // Si está vacío, ya no puede escribir los productos base automáticamente sin sesión.
-                    // Debe hacerse manualmente desde el admin.
-                    document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-gray-500">Catálogo vacío. Agrega productos desde el panel de administrador.</p>';
-                } else {
+                if (!snapshot.empty) {
                     inventario = snapshot.docs.map(doc => doc.data());
                     inventario.sort((a, b) => a.id - b.id);
-                    renderizarCatalogo();
-                    if(!document.getElementById('vista-admin').classList.contains('hidden')){
-                        renderizarAdmin();
-                    }
+                    renderizarDestacados(); // Llenar la vista de inicio
+                    renderizarCatalogo('Todas');
+                    if(!document.getElementById('vista-admin').classList.contains('hidden')) renderizarAdmin();
                 }
-            } catch (error) {
-                document.getElementById('contenedor-productos').innerHTML = '<p class="col-span-full text-center text-red-500">Error al cargar base de datos.</p>';
-            }
+            } catch (error) { console.error("Error al cargar BD", error); }
         }
 
-        // 4. NAVEGACIÓN Y CARRITO
-        function cambiarVista(vista) {
-            if (vista === 'admin') {
-                if (!auth.currentUser) {
-                    document.getElementById('modal-login').classList.remove('hidden');
-                    document.getElementById('modal-login').classList.add('flex');
-                    return; // Detiene la ejecución, espera el login
-                }
+        function generarTarjetaHTML(producto) {
+            return `
+                <div class="bg-white rounded-md overflow-hidden shadow border border-gray-50 transition-all duration-300 flex flex-col h-full group hover:shadow-2xl hover:-translate-y-2 relative">
+                    <div class="relative h-64 overflow-hidden flex-shrink-0 bg-gray-100 img-zoom">
+                        <img src="${producto.img}" alt="${producto.nombre}" class="w-full h-full object-cover transition duration-500">
+                        <span class="absolute top-3 left-3 bg-white px-3 py-1 text-xs font-bold text-piel-oscuro rounded-full shadow-sm opacity-95">${producto.categoria}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="font-serif text-lg text-piel-oscuro mb-1 font-semibold group-hover:text-piel-medio transition">${producto.nombre}</h3>
+                        <p class="text-gray-500 font-bold mb-4">$${producto.precio.toLocaleString('es-MX')} MXN</p>
+                        
+                        <div class="mb-4 mt-auto">
+                            <label class="text-xs text-gray-400 font-semibold mb-1 block">Talla (MX):</label>
+                            <select id="talla-${producto.id}" class="w-full border border-gray-200 rounded p-2 text-sm focus:outline-none focus:border-piel-medio bg-gray-50 transition">
+                                <option value="25">25</option><option value="26">26</option><option value="27">27</option>
+                                <option value="28">28</option><option value="29">29</option>
+                            </select>
+                        </div>
+                        <button onclick="agregarAlCarrito(${producto.id})" class="w-full bg-white border border-piel-medio text-piel-medio hover:bg-piel-medio hover:text-white py-2.5 rounded font-medium transition flex items-center justify-center gap-2">
+                            <i data-feather="shopping-cart" class="w-4 h-4"></i> Agregar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderizarDestacados() {
+            const cont = document.getElementById('contenedor-destacados');
+            cont.innerHTML = '';
+            // Toma los primeros 4 para el home
+            const destacados = inventario.slice(0, 4);
+            destacados.forEach(prod => { cont.innerHTML += generarTarjetaHTML(prod); });
+            feather.replace();
+        }
+
+        function renderizarCatalogo(filtroCategoria = 'Todas') {
+            const cont = document.getElementById('contenedor-productos');
+            const titulo = document.getElementById('titulo-catalogo');
+            cont.innerHTML = ''; 
+            
+            let filtrados = inventario;
+            if(filtroCategoria !== 'Todas') {
+                filtrados = inventario.filter(p => p.categoria === filtroCategoria);
+                titulo.innerText = `Colección: ${filtroCategoria}`;
+            } else {
+                titulo.innerText = `Nuestra Colección`;
+            }
+
+            if(filtrados.length === 0) cont.innerHTML = '<p class="col-span-full text-center text-gray-500">No hay productos en esta categoría.</p>';
+            
+            filtrados.forEach(prod => { cont.innerHTML += generarTarjetaHTML(prod); });
+            feather.replace();
+        }
+
+        // 6. NAVEGACIÓN Y CARRITO
+        function cambiarVista(vista, categoria = null) {
+            if (vista === 'admin' && !auth.currentUser) {
+                document.getElementById('modal-login').classList.remove('hidden');
+                document.getElementById('modal-login').classList.add('flex');
+                return;
             }
             
-            document.getElementById('vista-inicio').classList.add('hidden');
-            document.getElementById('vista-catalogo').classList.add('hidden');
-            document.getElementById('vista-checkout').classList.add('hidden');
-            document.getElementById('vista-admin').classList.add('hidden');
-            
+            ['vista-inicio', 'vista-catalogo', 'vista-checkout', 'vista-admin'].forEach(v => {
+                document.getElementById(v).classList.add('hidden');
+            });
             document.getElementById('vista-' + vista).classList.remove('hidden');
             
-            if(vista === 'catalogo') renderizarCatalogo();
+            if(vista === 'catalogo') renderizarCatalogo(categoria || 'Todas');
             if(vista === 'admin') renderizarAdmin();
             window.scrollTo(0,0);
-        }
-
-        function renderizarCatalogo() {
-            const contenedor = document.getElementById('contenedor-productos');
-            contenedor.innerHTML = ''; 
-            inventario.forEach(producto => {
-                contenedor.innerHTML += `
-                    <div class="bg-white rounded-md overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col h-full group">
-                        <div class="relative h-64 overflow-hidden flex-shrink-0">
-                            <img src="${producto.img}" alt="${producto.nombre}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <span class="absolute top-2 left-2 bg-white px-2 py-1 text-xs font-bold text-piel-oscuro rounded shadow opacity-90">${producto.categoria}</span>
-                        </div>
-                        <div class="p-5 flex flex-col flex-grow">
-                            <h3 class="font-serif text-lg text-piel-oscuro mb-1">${producto.nombre}</h3>
-                            <p class="text-gray-500 font-semibold mb-3">$${producto.precio.toLocaleString('es-MX')} MXN</p>
-                            
-                            <div class="mb-4 mt-auto">
-                                <label class="text-xs text-gray-500 font-semibold mb-1 block">Talla (MX):</label>
-                                <select id="talla-${producto.id}" class="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-piel-medio bg-gray-50">
-                                    <option value="25">25</option><option value="26">26</option><option value="27">27</option>
-                                    <option value="28">28</option><option value="29">29</option>
-                                </select>
-                            </div>
-
-                            <button onclick="agregarAlCarrito(${producto.id})" class="w-full bg-transparent border border-piel-medio text-piel-medio hover:bg-piel-medio hover:text-white py-2 rounded transition flex items-center justify-center gap-2">
-                                <i data-feather="shopping-cart" class="w-4 h-4"></i> Agregar
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            feather.replace();
         }
 
         function toggleCarrito() {
             const modal = document.getElementById('modal-carrito');
             if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden'); modal.classList.add('flex');
-                actualizarVisualCarrito();
+                modal.classList.remove('hidden'); modal.classList.add('flex'); actualizarVisualCarrito();
             } else {
                 modal.classList.add('hidden'); modal.classList.remove('flex');
             }
         }
 
         function agregarAlCarrito(id) {
-            const productoOriginal = inventario.find(p => p.id === id);
-            const tallaSeleccionada = document.getElementById(`talla-${id}`).value;
-            const productoParaCarrito = { ...productoOriginal, talla: tallaSeleccionada };
+            const selectElement = document.getElementById(`talla-${id}`);
+            // Verificar si el select existe (podría llamarse desde destacados o catálogo)
+            const tallaSeleccionada = selectElement ? selectElement.value : "25"; 
+            const prod = inventario.find(p => p.id === id);
+            carrito.push({ ...prod, talla: tallaSeleccionada });
             
-            carrito.push(productoParaCarrito);
             document.getElementById('contador-carrito').innerText = carrito.length;
             document.getElementById('contador-carrito-movil').innerText = carrito.length;
-            mostrarMensaje('¡Agregado!', `${productoOriginal.nombre} (Talla ${tallaSeleccionada}) se añadió a tu carrito.`, 'check-circle');
+            mostrarMensaje('¡Agregado!', `${prod.nombre} (Talla ${tallaSeleccionada}) en tu carrito.`, 'check-circle');
         }
 
         function eliminarDelCarrito(index) {
             carrito.splice(index, 1);
             document.getElementById('contador-carrito').innerText = carrito.length;
             document.getElementById('contador-carrito-movil').innerText = carrito.length;
-            actualizarVisualCarrito();
-            actualizarVisualCheckout();
+            actualizarVisualCarrito(); actualizarVisualCheckout();
         }
 
         function actualizarVisualCarrito() {
-            const contenedor = document.getElementById('carrito-lista');
-            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
+            const cont = document.getElementById('carrito-lista');
+            const total = carrito.reduce((s, p) => s + p.precio, 0);
             if (carrito.length === 0) {
-                contenedor.innerHTML = '<p class="text-center text-gray-500 mt-10">Tu carrito está vacío.</p>';
-                document.getElementById('carrito-total').innerText = '$0.00 MXN';
-                return;
+                cont.innerHTML = '<p class="text-center text-gray-400 mt-10">Tu carrito está vacío.</p>';
+                document.getElementById('carrito-total').innerText = '$0.00 MXN'; return;
             }
-            contenedor.innerHTML = '';
-            carrito.forEach((prod, index) => {
-                contenedor.innerHTML += `
+            cont.innerHTML = '';
+            carrito.forEach((p, i) => {
+                cont.innerHTML += `
                     <div class="flex items-center gap-4 border-b border-gray-100 pb-4">
-                        <img src="${prod.img}" class="w-16 h-16 object-cover rounded">
+                        <img src="${p.img}" class="w-16 h-16 object-cover rounded shadow-sm">
                         <div class="flex-grow">
-                            <h4 class="text-sm font-semibold text-piel-oscuro">${prod.nombre}</h4>
-                            <p class="text-xs text-gray-400 mb-1">Talla: ${prod.talla}</p>
-                            <p class="text-sm text-gray-600">$${prod.precio.toLocaleString('es-MX')} MXN</p>
+                            <h4 class="text-sm font-semibold text-piel-oscuro">${p.nombre}</h4>
+                            <p class="text-xs text-gray-400">Talla: ${p.talla}</p>
+                            <p class="text-sm text-gray-600 font-medium">$${p.precio.toLocaleString('es-MX')}</p>
                         </div>
-                        <button onclick="eliminarDelCarrito(${index})" class="text-red-400 hover:text-red-600"><i data-feather="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                `;
+                        <button onclick="eliminarDelCarrito(${i})" class="text-gray-300 hover:text-red-500 transition"><i data-feather="trash-2" class="w-5 h-5"></i></button>
+                    </div>`;
             });
             document.getElementById('carrito-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
             feather.replace();
         }
 
         function irACheckout() {
-            if(carrito.length === 0) {
-                mostrarMensaje('Carrito Vacío', 'Agrega productos antes de pagar.', 'alert-circle');
-                return;
-            }
-            toggleCarrito();
-            cambiarVista('checkout');
-            const contenedor = document.getElementById('checkout-lista');
-            contenedor.innerHTML = '';
-            carrito.forEach(prod => {
-                contenedor.innerHTML += `
+            if(carrito.length === 0) { mostrarMensaje('Carrito Vacío', 'Agrega productos primero.', 'alert-circle'); return; }
+            toggleCarrito(); cambiarVista('checkout');
+            const cont = document.getElementById('checkout-lista'); cont.innerHTML = '';
+            carrito.forEach(p => {
+                cont.innerHTML += `
                     <div class="flex justify-between text-sm items-center border-b border-gray-50 pb-2">
-                        <div class="flex flex-col">
-                            <span class="text-gray-700 font-medium">${prod.nombre}</span>
-                            <span class="text-xs text-gray-400">Talla ${prod.talla}</span>
-                        </div>
-                        <span class="font-semibold text-piel-oscuro">$${prod.precio.toLocaleString('es-MX')}</span>
-                    </div>
-                `;
+                        <div class="flex flex-col"><span class="text-gray-700">${p.nombre}</span><span class="text-xs text-gray-400">Talla ${p.talla}</span></div>
+                        <span class="font-semibold text-piel-oscuro">$${p.precio.toLocaleString('es-MX')}</span>
+                    </div>`;
             });
-            const total = carrito.reduce((sum, p) => sum + p.precio, 0);
-            document.getElementById('checkout-total').innerText = `$${total.toLocaleString('es-MX')} MXN`;
+            document.getElementById('checkout-total').innerText = `$${carrito.reduce((s, p) => s + p.precio, 0).toLocaleString('es-MX')} MXN`;
         }
 
         function seleccionarPago(metodo) {
             metodoPagoSeleccionado = metodo;
-            const btnTarjeta = document.getElementById('btn-pago-tarjeta');
-            const btnOxxo = document.getElementById('btn-pago-oxxo');
-            const formTarjeta = document.getElementById('formulario-tarjeta');
-            btnTarjeta.classList.remove('border-piel-medio', 'bg-piel-beige');
-            btnOxxo.classList.remove('border-piel-medio', 'bg-piel-beige');
+            document.getElementById('btn-pago-tarjeta').classList.remove('border-piel-medio', 'bg-piel-beige');
+            document.getElementById('btn-pago-oxxo').classList.remove('border-piel-medio', 'bg-piel-beige');
             if (metodo === 'tarjeta') {
-                btnTarjeta.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.remove('hidden');
+                document.getElementById('btn-pago-tarjeta').classList.add('border-piel-medio', 'bg-piel-beige');
+                document.getElementById('formulario-tarjeta').classList.remove('hidden');
             } else {
-                btnOxxo.classList.add('border-piel-medio', 'bg-piel-beige');
-                formTarjeta.classList.add('hidden');
+                document.getElementById('btn-pago-oxxo').classList.add('border-piel-medio', 'bg-piel-beige');
+                document.getElementById('formulario-tarjeta').classList.add('hidden');
             }
         }
 
         function procesarCompra() {
-            if(!metodoPagoSeleccionado) {
-                mostrarMensaje('Faltan Datos', 'Por favor selecciona un método de pago.', 'alert-circle');
-                return;
-            }
+            if(!metodoPagoSeleccionado) { mostrarMensaje('Faltan Datos', 'Selecciona un método de pago.', 'alert-circle'); return; }
             mostrarMensaje('¡Pedido Confirmado!', `Gracias por tu compra en ${nombreTiendaBase}.`, 'check-circle');
-            carrito = [];
-            document.getElementById('contador-carrito').innerText = 0;
-            document.getElementById('contador-carrito-movil').innerText = 0;
+            carrito = []; document.getElementById('contador-carrito').innerText = 0; document.getElementById('contador-carrito-movil').innerText = 0;
             setTimeout(() => cambiarVista('inicio'), 3000);
         }
 
-        // 5. LÓGICA DE ADMINISTRADOR SEGURA
+        // 7. PANEL ADMIN
         function renderizarAdmin() {
-            const tabla = document.getElementById('tabla-admin');
-            tabla.innerHTML = '';
+            const tabla = document.getElementById('tabla-admin'); tabla.innerHTML = '';
             inventario.forEach(prod => {
                 tabla.innerHTML += `
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="p-4 text-gray-500">#${prod.id}</td>
-                        <td class="p-4"><img src="${prod.img}" class="w-12 h-12 object-cover rounded"></td>
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
+                        <td class="p-4 text-gray-400 text-sm">#${prod.id}</td>
+                        <td class="p-4"><img src="${prod.img}" class="w-12 h-12 object-cover rounded shadow-sm"></td>
                         <td class="p-4 font-semibold text-gray-700">${prod.nombre}</td>
                         <td class="p-4 text-piel-oscuro font-bold">$${prod.precio}</td>
                         <td class="p-4">
-                            <button onclick="abrirModalAdmin(${prod.id})" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center gap-1">
-                                <i data-feather="edit-2" class="w-4 h-4"></i> Editar
-                            </button>
+                            <button onclick="abrirModalAdmin(${prod.id})" class="text-blue-500 hover:text-blue-700 text-sm font-semibold flex items-center gap-1"><i data-feather="edit-2" class="w-4 h-4"></i> Editar</button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
             feather.replace();
         }
 
         function abrirModalAdminNuevo() {
             document.getElementById('modal-admin-titulo').innerText = "Agregar Nuevo Calzado";
-            document.getElementById('edit-id').value = "";
-            document.getElementById('edit-nombre').value = "";
-            document.getElementById('edit-precio').value = "";
-            document.getElementById('edit-categoria').value = "";
+            document.getElementById('edit-id').value = ""; document.getElementById('edit-nombre').value = "";
+            document.getElementById('edit-precio').value = ""; document.getElementById('edit-categoria').value = "Hombre";
             document.getElementById('edit-imagen').value = "";
-            document.getElementById('modal-admin-editar').classList.remove('hidden');
-            document.getElementById('modal-admin-editar').classList.add('flex');
+            document.getElementById('modal-admin-editar').classList.remove('hidden'); document.getElementById('modal-admin-editar').classList.add('flex');
         }
 
         function abrirModalAdmin(id) {
             document.getElementById('modal-admin-titulo').innerText = "Editar Producto";
-            const producto = inventario.find(p => p.id === id);
-            document.getElementById('edit-id').value = producto.id;
-            document.getElementById('edit-nombre').value = producto.nombre;
-            document.getElementById('edit-precio').value = producto.precio;
-            document.getElementById('edit-categoria').value = producto.categoria;
-            document.getElementById('edit-imagen').value = producto.img;
-            document.getElementById('modal-admin-editar').classList.remove('hidden');
-            document.getElementById('modal-admin-editar').classList.add('flex');
+            const p = inventario.find(x => x.id === id);
+            document.getElementById('edit-id').value = p.id; document.getElementById('edit-nombre').value = p.nombre;
+            document.getElementById('edit-precio').value = p.precio; document.getElementById('edit-categoria').value = p.categoria;
+            document.getElementById('edit-imagen').value = p.img;
+            document.getElementById('modal-admin-editar').classList.remove('hidden'); document.getElementById('modal-admin-editar').classList.add('flex');
         }
 
         function cerrarModalAdmin() {
-            document.getElementById('modal-admin-editar').classList.add('hidden');
-            document.getElementById('modal-admin-editar').classList.remove('flex');
+            document.getElementById('modal-admin-editar').classList.add('hidden'); document.getElementById('modal-admin-editar').classList.remove('flex');
             document.getElementById('btn-guardar-admin').innerText = 'Guardar en Nube';
         }
 
         async function guardarEdicionProducto() {
-            const btn = document.getElementById('btn-guardar-admin');
-            btn.innerText = 'Guardando...';
+            const btn = document.getElementById('btn-guardar-admin'); btn.innerText = 'Guardando...';
             const idActual = document.getElementById('edit-id').value;
-            const esNuevo = idActual === ""; 
-            const id = esNuevo ? Date.now() : parseInt(idActual); 
-            const nuevoNombre = document.getElementById('edit-nombre').value;
-            const nuevoPrecio = parseFloat(document.getElementById('edit-precio').value);
-            const nuevaCat = document.getElementById('edit-categoria').value;
-            const nuevaImg = document.getElementById('edit-imagen').value;
+            const esNuevo = idActual === ""; const id = esNuevo ? Date.now() : parseInt(idActual); 
+            const nuevoNombre = document.getElementById('edit-nombre').value; const nuevoPrecio = parseFloat(document.getElementById('edit-precio').value);
+            const nuevaCat = document.getElementById('edit-categoria').value; const nuevaImg = document.getElementById('edit-imagen').value;
 
-            if(!nuevoNombre || !nuevoPrecio || !nuevaImg || !nuevaCat) {
-                mostrarMensaje('Campos Vacíos', 'Llena todos los datos.', 'alert-circle');
-                btn.innerText = 'Guardar en Nube';
-                return;
-            }
+            if(!nuevoNombre || !nuevoPrecio || !nuevaImg || !nuevaCat) { mostrarMensaje('Error', 'Llena todos los datos.', 'alert-circle'); btn.innerText = 'Guardar'; return; }
 
             try {
+                const prod = { id: id, nombre: nuevoNombre, precio: nuevoPrecio, img: nuevaImg, categoria: nuevaCat };
                 if (esNuevo) {
-                    const nuevoProducto = { id: id, nombre: nuevoNombre, precio: nuevoPrecio, img: nuevaImg, categoria: nuevaCat };
-                    await db.collection('productos').doc(id.toString()).set(nuevoProducto);
-                    inventario.push(nuevoProducto); 
+                    await db.collection('productos').doc(id.toString()).set(prod); inventario.push(prod); 
                 } else {
-                    await db.collection('productos').doc(id.toString()).update({
-                        nombre: nuevoNombre, precio: nuevoPrecio, categoria: nuevaCat, img: nuevaImg
-                    });
-                    let producto = inventario.find(p => p.id === id);
-                    producto.nombre = nuevoNombre; producto.precio = nuevoPrecio;
-                    producto.categoria = nuevaCat; producto.img = nuevaImg;
+                    await db.collection('productos').doc(id.toString()).update({ nombre: nuevoNombre, precio: nuevoPrecio, categoria: nuevaCat, img: nuevaImg });
+                    let p = inventario.find(x => x.id === id); Object.assign(p, prod);
                 }
-                cerrarModalAdmin();
-                renderizarAdmin();
-                renderizarCatalogo();
+                cerrarModalAdmin(); renderizarAdmin(); renderizarDestacados(); renderizarCatalogo();
                 mostrarMensaje('¡Listo!', esNuevo ? 'Calzado agregado.' : 'Producto actualizado.', 'check');
-            } catch (error) {
-                mostrarMensaje('Error de Permisos', 'Tu sesión expiró o no tienes permiso para editar.', 'alert-triangle');
-                btn.innerText = 'Guardar en Nube';
-            }
+            } catch (error) { mostrarMensaje('Error', 'Revisa tu sesión.', 'alert-triangle'); btn.innerText = 'Guardar'; }
         }
 
         function mostrarMensaje(titulo, texto, icono) {
-            document.getElementById('modal-titulo').innerText = titulo;
-            document.getElementById('modal-texto').innerText = texto;
+            document.getElementById('modal-titulo').innerText = titulo; document.getElementById('modal-texto').innerText = texto;
             document.getElementById('modal-icono').innerHTML = `<i data-feather="${icono}" class="w-12 h-12"></i>`;
-            document.getElementById('modal-mensaje').classList.remove('hidden');
-            document.getElementById('modal-mensaje').classList.add('flex');
+            document.getElementById('modal-mensaje').classList.remove('hidden'); document.getElementById('modal-mensaje').classList.add('flex');
             feather.replace();
         }
 
-        function cerrarModalMensaje() {
-            document.getElementById('modal-mensaje').classList.add('hidden');
-            document.getElementById('modal-mensaje').classList.remove('flex');
-        }
+        function cerrarModalMensaje() { document.getElementById('modal-mensaje').classList.add('hidden'); document.getElementById('modal-mensaje').classList.remove('flex'); }
 
+        // Inicializar
         cargarConfiguracion();
         cargarInventario();
     </script>
